@@ -19,8 +19,8 @@ import paho.mqtt.client as mqtt
 from foglamp.plugins.south.mqtt_sparkplug.sparkplug_b import *
 
 
-__author__ = "Jon Scott, Ashish Jabble"
-__copyright__ = "Copyright (c) 2019 Dianomic Systems"
+__author__ = "Jon Scott"
+__copyright__ = "Copyright (c) 2018 OSIsoft, LLC"
 __license__ = "Apache 2.0"
 __version__ = "${VERSION}"
 
