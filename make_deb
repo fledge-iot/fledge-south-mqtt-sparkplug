@@ -16,7 +16,7 @@
 ## limitations under the License.
 ##--------------------------------------------------------------------
 ##
-## Author: Ivan Zoratti, Ashish Jabble
+## Author: Ashish Jabble
 ##
 
 set -e
@@ -60,8 +60,8 @@ do
   esac
 done
 
-version="0.0.1"
-foglamp_version=`cat ${GIT_ROOT}/VERSION.south.mqtt-sparkplug | tr -d ' ' | grep 'foglamp_version' | head -1 | sed -e 's/\(.*\)version\(.*\)/\2/g'`
+version=`cat ${GIT_ROOT}/VERSION.south.mqtt_sparkplug | tr -d ' ' | grep 'foglamp_south_mqtt_sparkplug_version=' | head -1 | sed -e 's/\(.*\)=\(.*\)/\2/g'`
+foglamp_version=`cat ${GIT_ROOT}/VERSION.south.mqtt_sparkplug | tr -d ' ' | grep 'foglamp_version' | head -1 | sed -e 's/\(.*\)version\(.*\)/\2/g'`
 BUILD_ROOT="${GIT_ROOT}/packages/build"
 
 # Final package name
@@ -104,7 +104,7 @@ mkdir -p usr/local/foglamp
 cd usr/local/foglamp
 find ${GIT_ROOT}/python | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf
 cp -R ${GIT_ROOT}/python .
-cp -R ${GIT_ROOT}/VERSION.south.mqtt-sparkplug .
+cp -R ${GIT_ROOT}/VERSION.south.mqtt_sparkplug .
 echo "Done."
 
 # Build the package

@@ -13,24 +13,24 @@ import logging
 
 from foglamp.common import logger
 from foglamp.plugins.common import utils
-from foglamp.services.south import exceptions
-from foglamp.services.south.ingest import Ingest
+import async_ingest
 
 import paho.mqtt.client as mqtt
-import sparkplug_b as sparkplug
-from sparkplug_b import *
+from foglamp.plugins.south.mqtt_sparkplug.sparkplug_b import *
 
 
 __author__ = "Jon Scott"
+__copyright__ = "Copyright (c) 2018 OSIsoft, LLC"
 __license__ = "Apache 2.0"
 __version__ = "${VERSION}"
 
 
+_PLUGIN_NAME = 'MQTT Sparkplug'
 _DEFAULT_CONFIG = {
     'plugin': {
-        'description': 'MQTT Sparkplug Python Plugin',
+        'description': _PLUGIN_NAME,
         'type': 'string',
-        'default': 'mqtt-sparkplug',
+        'default': 'mqtt_sparkplug',
         'readonly': 'true'
     },
     'assetName': {
@@ -43,31 +43,31 @@ _DEFAULT_CONFIG = {
         'description': 'URL for MQTT Server',
         'type': 'string',
         'default': 'chariot.groov.com',
-        'order': '1'
+        'order': '2'
     },
     'port': {
         'description': 'Port for MQTT Server',
         'type': 'string',
         'default': '1883',
-        'order': '2'
+        'order': '3'
     },
     'user': {
         'description': 'Username for MQTT Server',
         'type': 'string',
         'default': 'opto',
-        'order': '3'
+        'order': '4'
     },
     'password': {
         'description': 'Password for MQTT Server',
         'type': 'string',
         'default': 'opto22',
-        'order': '4'
+        'order': '5'
     },
     'topic': {
-        'description': 'Topic ',
+        'description': 'Name of Topic',
         'type': 'string',
         'default': 'spBv1.0/Opto22/DDATA/groovEPIC_workshop/Strategy',
-        'order': '5'
+        'order': '6'
     },       
 }
 
@@ -76,8 +76,13 @@ _client = None
 _callback_event_loop = None
 _topic = None
 _serverURL = None
-_PLUGIN_NAME = 'MQTT Sparkplug Python Plugin'
 _assetName = None
+
+c_callback = None
+c_ingest_ref = None
+loop = None
+t = None
+
 
 def plugin_info():
     """ Returns information about the plugin.
@@ -89,7 +94,7 @@ def plugin_info():
 
     return {
         'name': _PLUGIN_NAME,
-        'version': '1.0',
+        'version': '1.5.0',
         'mode': 'async',
         'type': 'south',
         'interface': '1.0',
@@ -105,34 +110,8 @@ def plugin_init(config):
         data: JSON object to be used in future calls to the plugin
     Raises:
     """
-    global _client
-    global _topic
-    global _serverURL
-    global _assetName
-    data = copy.deepcopy(config)
-    
-    # Get connection parameters from configuration
-    user = config['user']['value']
-    passwd = config['password']['value']
-    _serverURL = config['url']['value']
-    port = config['port']['value']
-    
-    # Save the topic of interest for later - will be used in on_connect()
-    _topic = config['topic']['value']
-    _assetName = config['assetName']['value']
-    
-    # Create a connection to the MQTT server
-    try: 
-        _client = mqtt.Client()
-        _client.on_connect = on_connect
-        _client.on_message = on_message    
-        _client.username_pw_set(user, passwd)        
-        _client.connect(_serverURL, int(port), 60)
-    except Exception as e:
-        _LOGGER.error("Error in establishing a connection to MQTT Server: " + str(e))
-        _LOGGER.error("Please validate connection parameters")
-        
-    return data
+    handle = copy.deepcopy(config)
+    return handle
 
 
 def plugin_start(handle):
@@ -145,10 +124,35 @@ def plugin_start(handle):
         None - If no reading is available
     Raises:
         TimeoutError
-    """ 
+    """
+    global _client
+    global _topic
+    global _serverURL
+    global _assetName
+
+    # Get connection parameters from configuration
+    user = handle['user']['value']
+    password = handle['password']['value']
+    _serverURL = handle['url']['value']
+    port = handle['port']['value']
+
+    # Save the topic of interest for later - will be used in on_connect()
+    _topic = handle['topic']['value']
+    _assetName = handle['assetName']['value']
+
+    # Create a connection to the MQTT server
+    try:
+        _client = mqtt.Client()
+        _client.on_connect = on_connect
+        _client.on_message = on_message
+        _client.username_pw_set(user, password)
+        _client.connect(_serverURL, int(port), 60)
+    except Exception as e:
+        _LOGGER.error("Error in establishing a connection to MQTT Server: " + str(e))
+
     _client.loop_start()
-    _LOGGER.info('Plugin for {} has started.'.format(_assetName))    
-    
+
+
 def plugin_reconfigure(handle, new_config):
     """ Reconfigures the plugin
 
@@ -158,21 +162,16 @@ def plugin_reconfigure(handle, new_config):
     Returns:
         new_handle: new handle to be used in the future calls
     """
-    global _LOGGER
-    _LOGGER.info("Old config for {} {} \n new config {}".format(_assetName, handle, new_config))
+    _LOGGER.info("Old config for {} {} \n new config {}".format(_PLUGIN_NAME, handle, new_config))
 
-    # Find diff between old config and new config
-    diff = utils.get_diff(handle, new_config)
+    # plugin_shutdown
+    plugin_shutdown(handle)
 
-    # Plugin should re-initialize and restart if key configuration is changed
-    if 'url' in diff or 'assetName' in diff or 'topic' in diff:
-        plugin_shutdown(handle)
-        new_handle = plugin_init(new_config)
-        new_handle['restart'] = 'yes'
-        _LOGGER.info("Restarting {} plugin due to change in configuration key [{}]".format(_assetName, ', '.join(diff)))
-    else:
-        new_handle = copy.deepcopy(new_config)
-        new_handle['restart'] = 'no'
+    # plugin_init
+    new_handle = plugin_init(new_config)
+
+    # plugin_start
+    plugin_start(new_handle)
 
     return new_handle
 
@@ -195,7 +194,20 @@ def plugin_shutdown(handle):
         _callback_event_loop = None
     _LOGGER.info('{} has shut down.'.format(_PLUGIN_NAME))
 
-    
+
+def plugin_register_ingest(handle, callback, ingest_ref):
+    """Required plugin interface component to communicate to South C server
+
+    Args:
+        handle: handle returned by the plugin initialisation call
+        callback: C opaque object required to passed back to C->ingest method
+        ingest_ref: C opaque object required to passed back to C->ingest method
+    """
+    global c_callback, c_ingest_ref
+    c_callback = callback
+    c_ingest_ref = ingest_ref
+
+
 # MQTT Server Connection Callback
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):        
@@ -203,52 +215,40 @@ def on_connect(client, userdata, flags, rc):
     # reconnect then subscriptions will be renewed.
     global _topic
     global _serverURL
-    _LOGGER.info('{} plugin has connected to {}.'.format(_assetName, str(_serverURL)))
+    _LOGGER.info('{} plugin has connected to {}.'.format(_PLUGIN_NAME, str(_serverURL)))
     
     client.subscribe(_topic)
-    _LOGGER.info('{} plugin has subscribed to {}.'.format(_assetName, str(_topic)))
+    _LOGGER.info('{} plugin has subscribed to {}.'.format(_PLUGIN_NAME, str(_topic)))
 
     
 async def save_data(data):    
-    await Ingest.add_readings(asset=data['asset'], timestamp=data['timestamp'], key=data['key'], readings=data['readings'])
+    async_ingest.ingest_callback(c_callback, c_ingest_ref, data)
 
-    
+
 # MQTT Message Received Callback
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     global _callback_event_loop
-    #_LOGGER.info('{} has a message.'.format(_PLUGIN_NAME))    
     try:
-        if not Ingest.is_available():
-            _LOGGER.error("Ingest is not availabe")
-        else:
-            inboundPayload = sparkplug_b_pb2.Payload()
-            inboundPayload.ParseFromString(msg.payload)
-            time_stamp = utils.local_timestamp()
-            
-            if _callback_event_loop is None:
-                    _LOGGER.debug("Message processing event doesn't yet exist - creating new event loop.")
-                    asyncio.set_event_loop(asyncio.new_event_loop())
-                    _callback_event_loop = asyncio.get_event_loop()
-                    
-            for metric in inboundPayload.metrics:
-                readingKey = str(uuid.uuid4())
-                data = {
-                    'asset' : metric.name,
-                    'timestamp' : time_stamp, #metric.timestamp,
-                    'key' : readingKey,
-                    'readings' : {                        
-                        "value": metric.float_value,
-                    }                    
+        inbound_payload = sparkplug_b_pb2.Payload()
+        inbound_payload.ParseFromString(msg.payload)
+        time_stamp = utils.local_timestamp()
+
+        if _callback_event_loop is None:
+                _LOGGER.debug("Message processing event doesn't yet exist - creating new event loop.")
+                asyncio.set_event_loop(asyncio.new_event_loop())
+                _callback_event_loop = asyncio.get_event_loop()
+
+        for metric in inbound_payload.metrics:
+            key = str(uuid.uuid4())
+            data = {
+                'asset': metric.name,
+                'timestamp': time_stamp,  # metric.timestamp
+                'key': key,
+                'readings': {
+                    "value": metric.float_value,
                 }
-                #_LOGGER.info("UUID: " + readingKey)
-                #_LOGGER.info("Metric Name: " + str(metric.name))
-                #_LOGGER.info(metric)
-                
-           
-                _callback_event_loop.run_until_complete(save_data(data))              
-            
-            #_LOGGER.info('Exiting message callback.')
+            }
+            _callback_event_loop.run_until_complete(save_data(data))
     except Exception as e:
         _LOGGER.error(e)
-   
