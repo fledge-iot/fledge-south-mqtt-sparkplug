@@ -1,0 +1,10 @@
+Package: foglamp-south-mqtt-sparkplug
+Version: 1.0.0
+Section: devel
+Priority: optional
+Architecture: all
+Depends: foglamp
+Conflicts:
+Maintainer: Dianomic Systems, Inc. <info@dianomic.com>
+Homepage: http://www.dianomic.com
+Description: South plugin for collecting data from MQTT Sparkplug data sources.
