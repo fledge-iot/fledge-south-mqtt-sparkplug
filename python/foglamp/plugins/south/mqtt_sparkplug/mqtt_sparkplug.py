@@ -37,37 +37,43 @@ _DEFAULT_CONFIG = {
         'description': 'Name of Asset',
         'type': 'string',
         'default': 'mqtt',
-        'order': '1'
+        'order': '1',
+        'displayName': 'Asset Name'
     },
     'url': {
         'description': 'URL for MQTT Server',
         'type': 'string',
         'default': 'chariot.groov.com',
-        'order': '2'
+        'order': '2',
+        'displayName': 'MQTT Host'
     },
     'port': {
         'description': 'Port for MQTT Server',
         'type': 'string',
         'default': '1883',
-        'order': '3'
+        'order': '3',
+        'displayName': 'MQTT Port'
     },
     'user': {
         'description': 'Username for MQTT Server',
         'type': 'string',
         'default': 'opto',
-        'order': '4'
+        'order': '4',
+        'displayName': 'Username'
     },
     'password': {
         'description': 'Password for MQTT Server',
         'type': 'string',
         'default': 'opto22',
-        'order': '5'
+        'order': '5',
+        'displayName': 'Password'
     },
     'topic': {
         'description': 'Name of Topic',
         'type': 'string',
         'default': 'spBv1.0/Opto22/DDATA/groovEPIC_workshop/Strategy',
-        'order': '6'
+        'order': '6',
+        'displayName': 'Topic'
     },       
 }
 
