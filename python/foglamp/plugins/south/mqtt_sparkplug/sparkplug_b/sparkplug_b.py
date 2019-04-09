@@ -1,9 +1,10 @@
-import sparkplug_b_pb2
 import time
-from sparkplug_b_pb2 import Payload
+from foglamp.plugins.south.mqtt_sparkplug.sparkplug_b import sparkplug_b_pb2
+from foglamp.plugins.south.mqtt_sparkplug.sparkplug_b.sparkplug_b_pb2 import Payload
 
 seqNum = 0
 bdSeq = 0
+
 
 class DataSetDataType:
     Unknown = 0
@@ -21,6 +22,7 @@ class DataSetDataType:
     String = 12
     DateTime = 13
     Text = 14
+
 
 class MetricDataType:
     Unknown = 0
@@ -44,22 +46,6 @@ class MetricDataType:
     File = 18
     Template = 19
 
-class ParameterDataType:
-    Unknown = 0
-    Int8 = 1
-    Int16 = 2
-    Int32 = 3
-    Int64 = 4
-    UInt8 = 5
-    UInt16 = 6
-    UInt32 = 7
-    UInt64 = 8
-    Float = 9
-    Double = 10
-    Boolean = 11
-    String = 12
-    DateTime = 13
-    Text = 14
 
 class ParameterDataType:
     Unknown = 0
@@ -77,6 +63,25 @@ class ParameterDataType:
     String = 12
     DateTime = 13
     Text = 14
+
+
+class ParameterDataType:
+    Unknown = 0
+    Int8 = 1
+    Int16 = 2
+    Int32 = 3
+    Int64 = 4
+    UInt8 = 5
+    UInt16 = 6
+    UInt32 = 7
+    UInt64 = 8
+    Float = 9
+    Double = 10
+    Boolean = 11
+    String = 12
+    DateTime = 13
+    Text = 14
+
 
 ######################################################################
 # Always request this before requesting the Node Birth Payload
@@ -86,6 +91,7 @@ def getNodeDeathPayload():
     addMetric(payload, "bdSeq", None, MetricDataType.Int64, getBdSeqNum())
     return payload
 ######################################################################
+
 
 ######################################################################
 # Always request this after requesting the Node Death Payload
@@ -100,6 +106,7 @@ def getNodeBirthPayload():
     return payload
 ######################################################################
 
+
 ######################################################################
 # Get the DBIRTH payload
 ######################################################################
@@ -110,12 +117,14 @@ def getDeviceBirthPayload():
     return payload
 ######################################################################
 
+
 ######################################################################
 # Get a DDATA payload
 ######################################################################
 def getDdataPayload():
     return getDeviceBirthPayload()
 ######################################################################
+
 
 ######################################################################
 # Helper method for adding dataset metrics to a payload
@@ -135,6 +144,7 @@ def initDatasetMetric(payload, name, alias, columns, types):
     metric.dataset_value.types.extend(types)
     return metric.dataset_value
 ######################################################################
+
 
 ######################################################################
 # Helper method for adding dataset metrics to a payload
@@ -157,6 +167,7 @@ def initTemplateMetric(payload, name, alias, templateRef):
 
     return metric.template_value
 ######################################################################
+
 
 ######################################################################
 # Helper method for adding metrics to a container which can be a
@@ -233,6 +244,7 @@ def addMetric(container, name, alias, type, value):
     return metric
 ######################################################################
 
+
 ######################################################################
 # Helper method for adding metrics to a container which can be a
 # payload or a template
@@ -291,6 +303,7 @@ def addNullMetric(container, name, alias, type):
     return metric
 ######################################################################
 
+
 ######################################################################
 # Helper method for getting the next sequence number
 ######################################################################
@@ -303,6 +316,7 @@ def getSeqNum():
         seqNum = 0
     return retVal
 ######################################################################
+
 
 ######################################################################
 # Helper method for getting the next birth/death sequence number
