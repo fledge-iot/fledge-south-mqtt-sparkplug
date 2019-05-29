@@ -8,9 +8,6 @@
 # IDE
 *.idea
 
-# Build
-packages/build/
-
 # Compiled Object files
 *.pyc
 
