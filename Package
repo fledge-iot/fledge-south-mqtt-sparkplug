@@ -3,13 +3,13 @@
 plugin_name=mqtt_sparkplug
 plugin_type=south
 plugin_install_dirname=${plugin_name}
-plugin_package_name=foglamp-${plugin_type}-mqtt-sparkplug
+plugin_package_name=fledge-${plugin_type}-mqtt-sparkplug
 
 # Now build up the runtime requirements list. This has 3 components
 #   1. Generic packages we depend on in all architectures and package managers
 #   2. Architecture specific packages we depend on
 #   3. Package manager specific packages we depend on
-requirements="foglamp"
+requirements="fledge"
 
 case "$arch" in
 	x86_64)

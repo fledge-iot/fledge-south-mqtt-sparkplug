@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# FOGLAMP_BEGIN
-# See: http://foglamp.readthedocs.io/
-# FOGLAMP_END
+# FLEDGE_BEGIN
+# See: http://fledge.readthedocs.io/
+# FLEDGE_END
 
 """ Module for MQTT Sparkplug Python async plugin """
 
@@ -11,12 +11,12 @@ import copy
 import uuid
 import logging
 
-from foglamp.common import logger
-from foglamp.plugins.common import utils
+from fledge.common import logger
+from fledge.plugins.common import utils
 import async_ingest
 
 import paho.mqtt.client as mqtt
-from foglamp.plugins.south.mqtt_sparkplug.sparkplug_b import *
+from fledge.plugins.south.mqtt_sparkplug.sparkplug_b import *
 
 
 __author__ = "Jon Scott"

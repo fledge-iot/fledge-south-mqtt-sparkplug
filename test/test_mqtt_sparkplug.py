@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# FOGLAMP_BEGIN
-# See: http://foglamp.readthedocs.io/
-# FOGLAMP_END
+# FLEDGE_BEGIN
+# See: http://fledge.readthedocs.io/
+# FLEDGE_END
 
 from unittest.mock import patch
 import pytest
 
-from python.foglamp.plugins.south.mqtt_sparkplug import mqtt_sparkplug
+from python.fledge.plugins.south.mqtt_sparkplug import mqtt_sparkplug
 
 __author__ = "Ashish Jabble"
 __copyright__ = "Copyright (c) 2019 Dianomic Systems"

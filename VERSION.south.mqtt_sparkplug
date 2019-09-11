@@ -1,2 +1,2 @@
-foglamp_south_mqtt_sparkplug_version=1.6.0
-foglamp_version>=1.6
+fledge_south_mqtt_sparkplug_version=1.6.0
+fledge_version>=1.6

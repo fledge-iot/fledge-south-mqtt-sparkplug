@@ -1,13 +1,13 @@
 
-# foglamp-south-mqtt-sparkplug
-FogLAMP South plugin for collecting data from MQTT Sparkplug data sources.
+# fledge-south-mqtt-sparkplug
+Fledge South plugin for collecting data from MQTT Sparkplug data sources.
 
 
 ## Configuration Options
-![image](https://github.com/JonScott20/foglamp-south-mqtt-sparkplug/blob/master/images/MQTTConfiguration-FogLAMP.png)
+![image](https://github.com/JonScott20/fledge-south-mqtt-sparkplug/blob/master/images/MQTTConfiguration-Fledge.png)
 
 ## Sample Assets
-![image](https://github.com/JonScott20/foglamp-south-mqtt-sparkplug/blob/master/images/MQTTAssets-FogLAMP.png)
+![image](https://github.com/JonScott20/fledge-south-mqtt-sparkplug/blob/master/images/MQTTAssets-Fledge.png)
 
 ## Sample Data
-![image](https://github.com/JonScott20/foglamp-south-mqtt-sparkplug/blob/master/images/MQTTPanelTemp-FogLAMP.png)
+![image](https://github.com/JonScott20/fledge-south-mqtt-sparkplug/blob/master/images/MQTTPanelTemp-Fledge.png)

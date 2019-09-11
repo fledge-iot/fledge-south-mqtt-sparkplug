@@ -1,6 +1,6 @@
 import time
-from foglamp.plugins.south.mqtt_sparkplug.sparkplug_b import sparkplug_b_pb2
-from foglamp.plugins.south.mqtt_sparkplug.sparkplug_b.sparkplug_b_pb2 import Payload
+from fledge.plugins.south.mqtt_sparkplug.sparkplug_b import sparkplug_b_pb2
+from fledge.plugins.south.mqtt_sparkplug.sparkplug_b.sparkplug_b_pb2 import Payload
 
 seqNum = 0
 bdSeq = 0
