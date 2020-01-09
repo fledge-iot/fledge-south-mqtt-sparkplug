@@ -38,7 +38,8 @@ _DEFAULT_CONFIG = {
         'type': 'string',
         'default': 'mqtt',
         'order': '1',
-        'displayName': 'Asset Name'
+        'displayName': 'Asset Name',
+        'mandatory': 'true'
     },
     'url': {
         'description': 'URL for MQTT Server',
