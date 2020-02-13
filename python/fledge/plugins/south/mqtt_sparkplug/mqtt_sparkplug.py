@@ -8,7 +8,6 @@
 
 import asyncio
 import copy
-import uuid
 import logging
 
 from fledge.common import logger
@@ -246,11 +245,9 @@ def on_message(client, userdata, msg):
                 _callback_event_loop = asyncio.get_event_loop()
 
         for metric in inbound_payload.metrics:
-            key = str(uuid.uuid4())
             data = {
                 'asset': metric.name,
                 'timestamp': time_stamp,  # metric.timestamp
-                'key': key,
                 'readings': {
                     "value": metric.float_value,
                 }
