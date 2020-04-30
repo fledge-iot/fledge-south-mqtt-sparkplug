@@ -1,5 +1,5 @@
 .. Images
-.. |sparkplug_1| image:: images/sparkplug.jpg
+.. |sparkplug_1| image:: images/sparkplug_1.jpg
 
 MQTT Sparkplug B
 ================
