@@ -42,7 +42,7 @@ _DEFAULT_CONFIG = {
         'mandatory': 'true'
     },
     'url': {
-        'description': 'URL for MQTT Server',
+        'description': 'Hostname for MQTT Server',
         'type': 'string',
         'default': 'chariot.groov.com',
         'order': '2',
@@ -64,7 +64,7 @@ _DEFAULT_CONFIG = {
     },
     'password': {
         'description': 'Password for MQTT Server',
-        'type': 'string',
+        'type': 'password',
         'default': 'opto22',
         'order': '5',
         'displayName': 'Password'
