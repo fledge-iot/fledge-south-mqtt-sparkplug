@@ -30,7 +30,7 @@ def test_plugin_contract():
 def test_plugin_info():
     assert mqtt_sparkplug.plugin_info() == {
         'name': plugin_name,
-        'version': '1.5.0',
+        'version': '1.8.0',
         'mode': 'async',
         'type': 'south',
         'interface': '1.0',
