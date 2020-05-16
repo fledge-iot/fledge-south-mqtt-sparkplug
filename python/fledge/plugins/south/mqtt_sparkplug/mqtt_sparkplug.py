@@ -37,10 +37,11 @@ _DEFAULT_CONFIG = {
         'type': 'string',
         'default': 'mqtt',
         'order': '1',
-        'displayName': 'Asset Name'
+        'displayName': 'Asset Name',
+        'mandatory': 'true'
     },
     'url': {
-        'description': 'URL for MQTT Server',
+        'description': 'Hostname for MQTT Server',
         'type': 'string',
         'default': 'chariot.groov.com',
         'order': '2',
@@ -62,7 +63,7 @@ _DEFAULT_CONFIG = {
     },
     'password': {
         'description': 'Password for MQTT Server',
-        'type': 'string',
+        'type': 'password',
         'default': 'opto22',
         'order': '5',
         'displayName': 'Password'
@@ -99,7 +100,7 @@ def plugin_info():
 
     return {
         'name': _PLUGIN_NAME,
-        'version': '1.7.0',
+        'version': '1.8.0',
         'mode': 'async',
         'type': 'south',
         'interface': '1.0',
