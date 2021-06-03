@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # FLEDGE_BEGIN
-# See: http://fledge.readthedocs.io/
+# See: http://fledge-iot.readthedocs.io/
 # FLEDGE_END
 
 from unittest.mock import patch
@@ -30,7 +30,7 @@ def test_plugin_contract():
 def test_plugin_info():
     assert mqtt_sparkplug.plugin_info() == {
         'name': plugin_name,
-        'version': '1.9.0',
+        'version': '1.9.1',
         'mode': 'async',
         'type': 'south',
         'interface': '1.0',
