@@ -15,7 +15,6 @@ from fledge.plugins.common import utils
 import async_ingest
 
 import paho.mqtt.client as mqtt
-from fledge.plugins.south.mqtt_sparkplug.sparkplug_b import *
 
 
 __author__ = "Jon Scott"
