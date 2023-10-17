@@ -99,7 +99,7 @@ def plugin_info():
 
     return {
         'name': _PLUGIN_NAME,
-        'version': '2.1.0',
+        'version': '2.2.0',
         'mode': 'async',
         'type': 'south',
         'interface': '1.0',
