@@ -9,6 +9,7 @@
 import asyncio
 import copy
 import logging
+import json
 
 from fledge.common import logger
 from fledge.plugins.common import utils
@@ -16,12 +17,16 @@ import async_ingest
 
 import paho.mqtt.client as mqtt
 
+try:
+    from fledge.plugins.south.mqtt_sparkplug.sparkplug_b import sparkplug_b_pb2
+except:
+    # FIXME: Import sparkplug_b_pb2 in a better way for unit tests
+    pass
 
 __author__ = "Jon Scott"
 __copyright__ = "Copyright (c) 2018 OSIsoft, LLC"
 __license__ = "Apache 2.0"
 __version__ = "${VERSION}"
-
 
 _PLUGIN_NAME = 'MQTT Sparkplug'
 _DEFAULT_CONFIG = {
@@ -73,7 +78,7 @@ _DEFAULT_CONFIG = {
         'default': 'spBv1.0/Opto22/DDATA/groovEPIC_workshop/Strategy',
         'order': '6',
         'displayName': 'Topic'
-    },       
+    },
 }
 
 _LOGGER = logger.setup(__name__, level=logging.INFO)
@@ -125,7 +130,7 @@ def plugin_start(handle):
 
     Args:
         handle: handle returned by the plugin initialisation call
-    Returns:      
+    Returns:
         None - If no reading is available
     Raises:
         TimeoutError
@@ -215,18 +220,18 @@ def plugin_register_ingest(handle, callback, ingest_ref):
 
 # MQTT Server Connection Callback
 # The callback for when the client receives a CONNACK response from the server.
-def on_connect(client, userdata, flags, rc):        
+def on_connect(client, userdata, flags, rc):
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     global _topic
     global _serverURL
     _LOGGER.info('{} plugin has connected to {}.'.format(_PLUGIN_NAME, str(_serverURL)))
-    
+
     client.subscribe(_topic)
     _LOGGER.info('{} plugin has subscribed to {}.'.format(_PLUGIN_NAME, str(_topic)))
 
-    
-async def save_data(data):    
+
+async def save_data(data):
     async_ingest.ingest_callback(c_callback, c_ingest_ref, data)
 
 
@@ -234,22 +239,42 @@ async def save_data(data):
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     global _callback_event_loop
+    global _assetName
     try:
-        inbound_payload = sparkplug_b_pb2.Payload()
-        inbound_payload.ParseFromString(msg.payload)
-        time_stamp = utils.local_timestamp()
-
         if _callback_event_loop is None:
-                _LOGGER.debug("Message processing event doesn't yet exist - creating new event loop.")
-                asyncio.set_event_loop(asyncio.new_event_loop())
-                _callback_event_loop = asyncio.get_event_loop()
-
-        for metric in inbound_payload.metrics:
+            _LOGGER.debug("Message processing event doesn't yet exist - creating new event loop.")
+            asyncio.set_event_loop(asyncio.new_event_loop())
+            _callback_event_loop = asyncio.get_event_loop()
+        time_stamp = utils.local_timestamp()
+        try:
+            string_data = msg.payload.decode('utf-8')
+            dict_data = json.loads(string_data)
             data = {
-                'asset': metric.name,
-                'timestamp': time_stamp,  # metric.timestamp
+                'asset': _assetName,
+                'timestamp': time_stamp,
+                'readings': dict_data if isinstance(dict_data, dict) else {"value": string_data}
+            }
+            _callback_event_loop.run_until_complete(save_data(data))
+        except UnicodeDecodeError:
+            # Serialized data case with protobuf
+            inbound_payload = sparkplug_b_pb2.Payload()
+            inbound_payload.ParseFromString(msg.payload)
+            for metric in inbound_payload.metrics:
+                data = {
+                    'asset': metric.name,
+                    'timestamp': time_stamp,  # metric.timestamp
+                    'readings': {
+                        "value": metric.float_value,
+                    }
+                }
+                _callback_event_loop.run_until_complete(save_data(data))
+        except Exception:
+            # pass message payload as is
+            data = {
+                'asset': _assetName,
+                'timestamp': time_stamp,
                 'readings': {
-                    "value": metric.float_value,
+                    "value": string_data,
                 }
             }
             _callback_event_loop.run_until_complete(save_data(data))
