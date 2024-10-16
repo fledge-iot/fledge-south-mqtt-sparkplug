@@ -16,7 +16,12 @@ from fledge.plugins.common import utils
 import async_ingest
 
 import paho.mqtt.client as mqtt
-from fledge.plugins.south.mqtt_sparkplug.sparkplug_b import sparkplug_b_pb2
+
+try:
+    from fledge.plugins.south.mqtt_sparkplug.sparkplug_b import sparkplug_b_pb2
+except:
+    # FIXME: Import sparkplug_b_pb2 in a better way for unit tests
+    pass
 
 __author__ = "Jon Scott"
 __copyright__ = "Copyright (c) 2018 OSIsoft, LLC"
