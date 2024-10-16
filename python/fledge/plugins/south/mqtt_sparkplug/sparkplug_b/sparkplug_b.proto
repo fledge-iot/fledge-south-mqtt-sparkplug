@@ -1,0 +1,25 @@
+syntax = "proto2";
+
+package sparkplug;
+
+// Message representing a reading from an asset
+message Reading {
+    required string asset = 1;                 // The name of the asset
+    repeated ReadingValue readings = 2;        // A list of readings
+    required string timestamp = 3;              // The timestamp in ISO 8601 format
+}
+
+// Message representing a single reading value
+message ReadingValue {
+    required string name = 1;                   // The name of the reading
+    oneof value {
+        double value_double = 2;                // For double values
+        uint64 value_int = 3;                   // For integer values
+        string value_string = 4;                // For string values
+    }
+}
+
+// Root message that could contain multiple readings
+message ReadingsList {
+    repeated Reading readings = 1;               // List of readings
+}

@@ -15,7 +15,7 @@ from fledge.plugins.common import utils
 import async_ingest
 
 import paho.mqtt.client as mqtt
-
+from fledge.plugins.south.mqtt_sparkplug.sparkplug_b import sparkplug_b_pb2
 
 __author__ = "Jon Scott"
 __copyright__ = "Copyright (c) 2018 OSIsoft, LLC"
@@ -235,7 +235,7 @@ async def save_data(data):
 def on_message(client, userdata, msg):
     global _callback_event_loop
     try:
-        inbound_payload = sparkplug_b_pb2.Payload()
+        inbound_payload = sparkplug_b_pb2.ReadingsList()
         inbound_payload.ParseFromString(msg.payload)
         time_stamp = utils.local_timestamp()
 
@@ -244,14 +244,26 @@ def on_message(client, userdata, msg):
                 asyncio.set_event_loop(asyncio.new_event_loop())
                 _callback_event_loop = asyncio.get_event_loop()
 
-        for metric in inbound_payload.metrics:
+                # Process and collect data points
+        for reading in inbound_payload.readings:
+            # Initialize the structured data dictionary
             data = {
-                'asset': metric.name,
-                'timestamp': time_stamp,  # metric.timestamp
-                'readings': {
-                    "value": metric.float_value,
-                }
+                'asset': reading.asset,
+                'timestamp': time_stamp, # reading.timestamp,
+                'readings': {}
             }
+
+            # Populate the readings dictionary
+            for reading_value in reading.readings:
+                value = None
+                if reading_value.HasField('value_double'):
+                    value = reading_value.value_double
+                elif reading_value.HasField('value_int'):
+                    value = reading_value.value_int
+                elif reading_value.HasField('value_string'):
+                    value = reading_value.value_string
+                # Add to the readings dictionary using the reading name as the key
+                data['readings'][reading_value.name] = value
             _callback_event_loop.run_until_complete(save_data(data))
     except Exception as e:
         _LOGGER.error(e)
