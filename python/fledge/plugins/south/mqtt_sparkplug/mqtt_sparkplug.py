@@ -242,31 +242,41 @@ def on_message(client, userdata, msg):
     global _assetName
     try:
         if _callback_event_loop is None:
-            _LOGGER.debug("Message processing event doesn't yet exist - creating new event loop.")
             asyncio.set_event_loop(asyncio.new_event_loop())
             _callback_event_loop = asyncio.get_event_loop()
         time_stamp = utils.local_timestamp()
         try:
-            string_data = msg.payload.decode('utf-8')
-            dict_data = json.loads(string_data)
+            data_str = msg.payload.decode('utf-8').replace('\n', '')
+            data_dict = json.loads(data_str)
             data = {
                 'asset': _assetName,
                 'timestamp': time_stamp,
-                'readings': dict_data if isinstance(dict_data, dict) else {"value": string_data}
+                'readings': data_dict if isinstance(data_dict, dict) else {"value": data_str}
             }
             _callback_event_loop.run_until_complete(save_data(data))
         except UnicodeDecodeError:
-            # Serialized data case with protobuf
-            inbound_payload = sparkplug_b_pb2.Payload()
-            inbound_payload.ParseFromString(msg.payload)
-            for metric in inbound_payload.metrics:
+            # Protobuf message structure
+            readings_list = sparkplug_b_pb2.ReadingsList()
+            readings_list.ParseFromString(msg.payload)
+            for reading in readings_list.readings:
+                # Initialize the structured data dictionary
                 data = {
-                    'asset': metric.name,
-                    'timestamp': time_stamp,  # metric.timestamp
-                    'readings': {
-                        "value": metric.float_value,
-                    }
+                    'asset': reading.asset,
+                    'timestamp': time_stamp, # reading.timestamp,
+                    'readings': {}
                 }
+                # Populate the readings dictionary
+                for reading_value in reading.readings:
+                    value = None
+                    if reading_value.HasField('value_double'):
+                        value = reading_value.value_double
+                    elif reading_value.HasField('value_int'):
+                        value = reading_value.value_int
+                    elif reading_value.HasField('value_string'):
+                        value = reading_value.value_string
+                    # TODO: FOGL- 9198 - Handle other data types
+                    # Add to the readings dictionary using the reading name as the key
+                    data['readings'][reading_value.name] = value
                 _callback_event_loop.run_until_complete(save_data(data))
         except Exception:
             # pass message payload as is
@@ -274,9 +284,10 @@ def on_message(client, userdata, msg):
                 'asset': _assetName,
                 'timestamp': time_stamp,
                 'readings': {
-                    "value": string_data,
+                    "value": data_str,
                 }
             }
             _callback_event_loop.run_until_complete(save_data(data))
     except Exception as e:
         _LOGGER.error(e)
+
