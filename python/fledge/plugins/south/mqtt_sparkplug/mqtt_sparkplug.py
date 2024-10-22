@@ -249,7 +249,9 @@ def on_message(client, userdata, msg):
 
         for metric in sparkplug_payload.metrics:
             value = ""
-            if metric.HasField("float_value"):
+            if metric.HasField("bool_value"):
+                value = metric.bool_value
+            elif metric.HasField("float_value"):
                 value = metric.float_value
             elif metric.HasField("int_value"):
                 value = metric.int_value

@@ -7,9 +7,11 @@ message Metric {
     int64 timestamp = 2;               // The timestamp in milliseconds since epoch
 
     oneof value {
-        float float_value = 3;         // Float value
-        int64 int_value = 4;           // Integer value
-        string string_value = 5;       // String value
+        bool bool_value = 3;           // Boolean value
+        float float_value = 4;         // Float value
+        int64 int_value = 5;           // Integer value
+        string string_value = 6;       // String value
+        // TODO: FOGL-9198 T_FLOAT_ARRAY, T_DP_DICT, T_DP_LIST, T_IMAGE, T_DATABUFFER
     }
 }
 

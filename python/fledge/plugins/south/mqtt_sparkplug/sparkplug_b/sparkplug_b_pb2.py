@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='sparkplug',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x11sparkplug_b.proto\x12\tsparkplug\"v\n\x06Metric\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12\x15\n\x0b\x66loat_value\x18\x03 \x01(\x02H\x00\x12\x13\n\tint_value\x18\x04 \x01(\x03H\x00\x12\x16\n\x0cstring_value\x18\x05 \x01(\tH\x00\x42\x07\n\x05value\"-\n\x07Payload\x12\"\n\x07metrics\x18\x01 \x03(\x0b\x32\x11.sparkplug.Metricb\x06proto3')
+  serialized_pb=_b('\n\x11sparkplug_b.proto\x12\tsparkplug\"\x8c\x01\n\x06Metric\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12\x14\n\nbool_value\x18\x03 \x01(\x08H\x00\x12\x15\n\x0b\x66loat_value\x18\x04 \x01(\x02H\x00\x12\x13\n\tint_value\x18\x05 \x01(\x03H\x00\x12\x16\n\x0cstring_value\x18\x06 \x01(\tH\x00\x42\x07\n\x05value\"-\n\x07Payload\x12\"\n\x07metrics\x18\x01 \x03(\x0b\x32\x11.sparkplug.Metricb\x06proto3')
 )
 
 
@@ -47,22 +47,29 @@ _METRIC = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='float_value', full_name='sparkplug.Metric.float_value', index=2,
-      number=3, type=2, cpp_type=6, label=1,
+      name='bool_value', full_name='sparkplug.Metric.bool_value', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='float_value', full_name='sparkplug.Metric.float_value', index=3,
+      number=4, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='int_value', full_name='sparkplug.Metric.int_value', index=3,
-      number=4, type=3, cpp_type=2, label=1,
+      name='int_value', full_name='sparkplug.Metric.int_value', index=4,
+      number=5, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='string_value', full_name='sparkplug.Metric.string_value', index=4,
-      number=5, type=9, cpp_type=9, label=1,
+      name='string_value', full_name='sparkplug.Metric.string_value', index=5,
+      number=6, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -82,8 +89,8 @@ _METRIC = _descriptor.Descriptor(
       name='value', full_name='sparkplug.Metric.value',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=32,
-  serialized_end=150,
+  serialized_start=33,
+  serialized_end=173,
 )
 
 
@@ -113,10 +120,13 @@ _PAYLOAD = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=152,
-  serialized_end=197,
+  serialized_start=175,
+  serialized_end=220,
 )
 
+_METRIC.oneofs_by_name['value'].fields.append(
+  _METRIC.fields_by_name['bool_value'])
+_METRIC.fields_by_name['bool_value'].containing_oneof = _METRIC.oneofs_by_name['value']
 _METRIC.oneofs_by_name['value'].fields.append(
   _METRIC.fields_by_name['float_value'])
 _METRIC.fields_by_name['float_value'].containing_oneof = _METRIC.oneofs_by_name['value']
