@@ -19,89 +19,51 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='sparkplug',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x11sparkplug_b.proto\x12\tsparkplug\"V\n\x07Reading\x12\r\n\x05\x61sset\x18\x01 \x01(\t\x12)\n\x08readings\x18\x02 \x03(\x0b\x32\x17.sparkplug.ReadingValue\x12\x11\n\ttimestamp\x18\x03 \x01(\t\"j\n\x0cReadingValue\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x16\n\x0cvalue_string\x18\x02 \x01(\tH\x00\x12\x13\n\tvalue_int\x18\x03 \x01(\x04H\x00\x12\x16\n\x0cvalue_double\x18\x04 \x01(\x01H\x00\x42\x07\n\x05value\"4\n\x0cReadingsList\x12$\n\x08readings\x18\x01 \x03(\x0b\x32\x12.sparkplug.Readingb\x06proto3')
+  serialized_pb=_b('\n\x11sparkplug_b.proto\x12\tsparkplug\"v\n\x06Metric\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12\x15\n\x0b\x66loat_value\x18\x03 \x01(\x02H\x00\x12\x13\n\tint_value\x18\x04 \x01(\x03H\x00\x12\x16\n\x0cstring_value\x18\x05 \x01(\tH\x00\x42\x07\n\x05value\"-\n\x07Payload\x12\"\n\x07metrics\x18\x01 \x03(\x0b\x32\x11.sparkplug.Metricb\x06proto3')
 )
 
 
 
 
-_READING = _descriptor.Descriptor(
-  name='Reading',
-  full_name='sparkplug.Reading',
+_METRIC = _descriptor.Descriptor(
+  name='Metric',
+  full_name='sparkplug.Metric',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='asset', full_name='sparkplug.Reading.asset', index=0,
+      name='name', full_name='sparkplug.Metric.name', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='readings', full_name='sparkplug.Reading.readings', index=1,
-      number=2, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='timestamp', full_name='sparkplug.Reading.timestamp', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=32,
-  serialized_end=118,
-)
-
-
-_READINGVALUE = _descriptor.Descriptor(
-  name='ReadingValue',
-  full_name='sparkplug.ReadingValue',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='sparkplug.ReadingValue.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='value_string', full_name='sparkplug.ReadingValue.value_string', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='value_int', full_name='sparkplug.ReadingValue.value_int', index=2,
-      number=3, type=4, cpp_type=4, label=1,
+      name='timestamp', full_name='sparkplug.Metric.timestamp', index=1,
+      number=2, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='value_double', full_name='sparkplug.ReadingValue.value_double', index=3,
-      number=4, type=1, cpp_type=5, label=1,
+      name='float_value', full_name='sparkplug.Metric.float_value', index=2,
+      number=3, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='int_value', full_name='sparkplug.Metric.int_value', index=3,
+      number=4, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='string_value', full_name='sparkplug.Metric.string_value', index=4,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -117,23 +79,23 @@ _READINGVALUE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
     _descriptor.OneofDescriptor(
-      name='value', full_name='sparkplug.ReadingValue.value',
+      name='value', full_name='sparkplug.Metric.value',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=120,
-  serialized_end=226,
+  serialized_start=32,
+  serialized_end=150,
 )
 
 
-_READINGSLIST = _descriptor.Descriptor(
-  name='ReadingsList',
-  full_name='sparkplug.ReadingsList',
+_PAYLOAD = _descriptor.Descriptor(
+  name='Payload',
+  full_name='sparkplug.Payload',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='readings', full_name='sparkplug.ReadingsList.readings', index=0,
+      name='metrics', full_name='sparkplug.Payload.metrics', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -151,46 +113,37 @@ _READINGSLIST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=228,
-  serialized_end=280,
+  serialized_start=152,
+  serialized_end=197,
 )
 
-_READING.fields_by_name['readings'].message_type = _READINGVALUE
-_READINGVALUE.oneofs_by_name['value'].fields.append(
-  _READINGVALUE.fields_by_name['value_string'])
-_READINGVALUE.fields_by_name['value_string'].containing_oneof = _READINGVALUE.oneofs_by_name['value']
-_READINGVALUE.oneofs_by_name['value'].fields.append(
-  _READINGVALUE.fields_by_name['value_int'])
-_READINGVALUE.fields_by_name['value_int'].containing_oneof = _READINGVALUE.oneofs_by_name['value']
-_READINGVALUE.oneofs_by_name['value'].fields.append(
-  _READINGVALUE.fields_by_name['value_double'])
-_READINGVALUE.fields_by_name['value_double'].containing_oneof = _READINGVALUE.oneofs_by_name['value']
-_READINGSLIST.fields_by_name['readings'].message_type = _READING
-DESCRIPTOR.message_types_by_name['Reading'] = _READING
-DESCRIPTOR.message_types_by_name['ReadingValue'] = _READINGVALUE
-DESCRIPTOR.message_types_by_name['ReadingsList'] = _READINGSLIST
+_METRIC.oneofs_by_name['value'].fields.append(
+  _METRIC.fields_by_name['float_value'])
+_METRIC.fields_by_name['float_value'].containing_oneof = _METRIC.oneofs_by_name['value']
+_METRIC.oneofs_by_name['value'].fields.append(
+  _METRIC.fields_by_name['int_value'])
+_METRIC.fields_by_name['int_value'].containing_oneof = _METRIC.oneofs_by_name['value']
+_METRIC.oneofs_by_name['value'].fields.append(
+  _METRIC.fields_by_name['string_value'])
+_METRIC.fields_by_name['string_value'].containing_oneof = _METRIC.oneofs_by_name['value']
+_PAYLOAD.fields_by_name['metrics'].message_type = _METRIC
+DESCRIPTOR.message_types_by_name['Metric'] = _METRIC
+DESCRIPTOR.message_types_by_name['Payload'] = _PAYLOAD
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-Reading = _reflection.GeneratedProtocolMessageType('Reading', (_message.Message,), dict(
-  DESCRIPTOR = _READING,
+Metric = _reflection.GeneratedProtocolMessageType('Metric', (_message.Message,), dict(
+  DESCRIPTOR = _METRIC,
   __module__ = 'sparkplug_b_pb2'
-  # @@protoc_insertion_point(class_scope:sparkplug.Reading)
+  # @@protoc_insertion_point(class_scope:sparkplug.Metric)
   ))
-_sym_db.RegisterMessage(Reading)
+_sym_db.RegisterMessage(Metric)
 
-ReadingValue = _reflection.GeneratedProtocolMessageType('ReadingValue', (_message.Message,), dict(
-  DESCRIPTOR = _READINGVALUE,
+Payload = _reflection.GeneratedProtocolMessageType('Payload', (_message.Message,), dict(
+  DESCRIPTOR = _PAYLOAD,
   __module__ = 'sparkplug_b_pb2'
-  # @@protoc_insertion_point(class_scope:sparkplug.ReadingValue)
+  # @@protoc_insertion_point(class_scope:sparkplug.Payload)
   ))
-_sym_db.RegisterMessage(ReadingValue)
-
-ReadingsList = _reflection.GeneratedProtocolMessageType('ReadingsList', (_message.Message,), dict(
-  DESCRIPTOR = _READINGSLIST,
-  __module__ = 'sparkplug_b_pb2'
-  # @@protoc_insertion_point(class_scope:sparkplug.ReadingsList)
-  ))
-_sym_db.RegisterMessage(ReadingsList)
+_sym_db.RegisterMessage(Payload)
 
 
 # @@protoc_insertion_point(module_scope)

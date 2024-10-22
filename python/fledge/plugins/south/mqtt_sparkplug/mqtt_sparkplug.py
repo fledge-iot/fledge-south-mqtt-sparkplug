@@ -9,13 +9,12 @@
 import asyncio
 import copy
 import logging
-import json
 
 from fledge.common import logger
-from fledge.plugins.common import utils
 import async_ingest
 
 import paho.mqtt.client as mqtt
+from datetime import datetime, timezone
 
 try:
     from fledge.plugins.south.mqtt_sparkplug.sparkplug_b import sparkplug_b_pb2
@@ -244,29 +243,25 @@ def on_message(client, userdata, msg):
         if _callback_event_loop is None:
             asyncio.set_event_loop(asyncio.new_event_loop())
             _callback_event_loop = asyncio.get_event_loop()
-        time_stamp = utils.local_timestamp()
         # Protobuf message structure
-        readings_list = sparkplug_b_pb2.ReadingsList()
-        readings_list.ParseFromString(msg.payload)
-        for reading in readings_list.readings:
-            # Initialize the structured data dictionary
+        sparkplug_payload = sparkplug_b_pb2.Payload()
+        sparkplug_payload.ParseFromString(msg.payload)
+
+        for metric in sparkplug_payload.metrics:
+            value = ""
+            if metric.HasField("float_value"):
+                value = metric.float_value
+            elif metric.HasField("int_value"):
+                value = metric.int_value
+            elif metric.HasField("string_value"):
+                value = metric.string_value
+            # TODO: FOGL- 9198 - Handle other data types
             data = {
-                'asset': reading.asset,
-                'timestamp': time_stamp,
-                'readings': {}
+                'asset': _assetName,
+                'timestamp': datetime.fromtimestamp(metric.timestamp, tz=timezone.utc
+                                                    ).strftime('%Y-%m-%d %H:%M:%S.%s'),
+                'readings': {metric.name: value}
             }
-            # Populate the readings dictionary
-            for reading_value in reading.readings:
-                value = None
-                if reading_value.HasField('value_double'):
-                    value = reading_value.value_double
-                elif reading_value.HasField('value_int'):
-                    value = reading_value.value_int
-                elif reading_value.HasField('value_string'):
-                    value = reading_value.value_string
-                # TODO: FOGL- 9198 - Handle other data types
-                # Add to the readings dictionary using the reading name as the key
-                data['readings'][reading_value.name] = value
             _callback_event_loop.run_until_complete(save_data(data))
     except Exception as ex:
         msg = ("Message payload must comply with spBv1.0 standards. Please ensure that the format and structure of the "
