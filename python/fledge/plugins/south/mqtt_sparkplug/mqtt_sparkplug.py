@@ -9,13 +9,12 @@
 import asyncio
 import copy
 import logging
-import json
 
 from fledge.common import logger
-from fledge.plugins.common import utils
 import async_ingest
 
 import paho.mqtt.client as mqtt
+from datetime import datetime, timezone
 
 try:
     from fledge.plugins.south.mqtt_sparkplug.sparkplug_b import sparkplug_b_pb2
@@ -195,7 +194,6 @@ def plugin_shutdown(handle):
         plugin shutdown
     """
     global _client
-    global _LOGGER
     global _callback_event_loop
 
     _client.loop_stop(force=False)
@@ -242,41 +240,36 @@ def on_message(client, userdata, msg):
     global _assetName
     try:
         if _callback_event_loop is None:
-            _LOGGER.debug("Message processing event doesn't yet exist - creating new event loop.")
             asyncio.set_event_loop(asyncio.new_event_loop())
             _callback_event_loop = asyncio.get_event_loop()
-        time_stamp = utils.local_timestamp()
-        try:
-            string_data = msg.payload.decode('utf-8')
-            dict_data = json.loads(string_data)
+        # Protobuf message structure
+        sparkplug_payload = sparkplug_b_pb2.Payload()
+        sparkplug_payload.ParseFromString(msg.payload)
+
+        for metric in sparkplug_payload.metrics:
+            value = "Unknown"
+            if metric.HasField("bool_value"):
+                """ bool value cast to int as internal. See FOGL-8067 """
+                value = metric.bool_value
+            elif metric.HasField("float_value"):
+                value = metric.float_value
+            elif metric.HasField("int_value"):
+                value = metric.int_value
+            elif metric.HasField("string_value"):
+                value = metric.string_value
+            # TODO: FOGL- 9198 - Handle other data types
+            if value == "Unknown":
+                _LOGGER.warning("Ignoring metric '{}' due to unknown type. "
+                                "Only supported types are: float, integer, string, bool.".format(metric.name))
+                continue
             data = {
                 'asset': _assetName,
-                'timestamp': time_stamp,
-                'readings': dict_data if isinstance(dict_data, dict) else {"value": string_data}
+                'timestamp': datetime.fromtimestamp(metric.timestamp, tz=timezone.utc
+                                                    ).strftime('%Y-%m-%d %H:%M:%S.%s'),
+                'readings': {metric.name: value}
             }
             _callback_event_loop.run_until_complete(save_data(data))
-        except UnicodeDecodeError:
-            # Serialized data case with protobuf
-            inbound_payload = sparkplug_b_pb2.Payload()
-            inbound_payload.ParseFromString(msg.payload)
-            for metric in inbound_payload.metrics:
-                data = {
-                    'asset': metric.name,
-                    'timestamp': time_stamp,  # metric.timestamp
-                    'readings': {
-                        "value": metric.float_value,
-                    }
-                }
-                _callback_event_loop.run_until_complete(save_data(data))
-        except Exception:
-            # pass message payload as is
-            data = {
-                'asset': _assetName,
-                'timestamp': time_stamp,
-                'readings': {
-                    "value": string_data,
-                }
-            }
-            _callback_event_loop.run_until_complete(save_data(data))
-    except Exception as e:
-        _LOGGER.error(e)
+    except Exception as ex:
+        msg = ("Message payload must comply with spBv1.0 standards. Please ensure that the format and structure of the "
+               "payload adhere to the specified requirements.")
+        _LOGGER.error(ex, msg)
