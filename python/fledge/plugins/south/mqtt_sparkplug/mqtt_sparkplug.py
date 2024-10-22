@@ -194,7 +194,6 @@ def plugin_shutdown(handle):
         plugin shutdown
     """
     global _client
-    global _LOGGER
     global _callback_event_loop
 
     _client.loop_stop(force=False)
@@ -248,8 +247,9 @@ def on_message(client, userdata, msg):
         sparkplug_payload.ParseFromString(msg.payload)
 
         for metric in sparkplug_payload.metrics:
-            value = ""
+            value = "Unknown"
             if metric.HasField("bool_value"):
+                """ bool value cast to int as internal. See FOGL-8067 """
                 value = metric.bool_value
             elif metric.HasField("float_value"):
                 value = metric.float_value
@@ -258,6 +258,10 @@ def on_message(client, userdata, msg):
             elif metric.HasField("string_value"):
                 value = metric.string_value
             # TODO: FOGL- 9198 - Handle other data types
+            if value == "Unknown":
+                _LOGGER.warning("Ignoring metric '{}' due to unknown type. "
+                                "Only supported types are: float, integer, string, bool.".format(metric.name))
+                continue
             data = {
                 'asset': _assetName,
                 'timestamp': datetime.fromtimestamp(metric.timestamp, tz=timezone.utc
