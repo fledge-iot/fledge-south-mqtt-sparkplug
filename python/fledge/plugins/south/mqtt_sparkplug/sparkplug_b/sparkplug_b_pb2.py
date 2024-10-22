@@ -7,7 +7,6 @@ from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
-from google.protobuf import descriptor_pb2
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
@@ -18,10 +17,10 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='sparkplug_b.proto',
   package='sparkplug',
-  syntax='proto2',
-  serialized_pb=_b('\n\x11sparkplug_b.proto\x12\tsparkplug\"V\n\x07Reading\x12\r\n\x05\x61sset\x18\x01 \x02(\t\x12)\n\x08readings\x18\x02 \x03(\x0b\x32\x17.sparkplug.ReadingValue\x12\x11\n\ttimestamp\x18\x03 \x02(\t\"j\n\x0cReadingValue\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x16\n\x0cvalue_string\x18\x02 \x01(\tH\x00\x12\x13\n\tvalue_int\x18\x03 \x01(\x04H\x00\x12\x16\n\x0cvalue_double\x18\x04 \x01(\x01H\x00\x42\x07\n\x05value\"4\n\x0cReadingsList\x12$\n\x08readings\x18\x01 \x03(\x0b\x32\x12.sparkplug.Reading')
+  syntax='proto3',
+  serialized_options=None,
+  serialized_pb=_b('\n\x11sparkplug_b.proto\x12\tsparkplug\"V\n\x07Reading\x12\r\n\x05\x61sset\x18\x01 \x01(\t\x12)\n\x08readings\x18\x02 \x03(\x0b\x32\x17.sparkplug.ReadingValue\x12\x11\n\ttimestamp\x18\x03 \x01(\t\"j\n\x0cReadingValue\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x16\n\x0cvalue_string\x18\x02 \x01(\tH\x00\x12\x13\n\tvalue_int\x18\x03 \x01(\x04H\x00\x12\x16\n\x0cvalue_double\x18\x04 \x01(\x01H\x00\x42\x07\n\x05value\"4\n\x0cReadingsList\x12$\n\x08readings\x18\x01 \x03(\x0b\x32\x12.sparkplug.Readingb\x06proto3')
 )
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 
@@ -35,34 +34,34 @@ _READING = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='asset', full_name='sparkplug.Reading.asset', index=0,
-      number=1, type=9, cpp_type=9, label=2,
+      number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='readings', full_name='sparkplug.Reading.readings', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='timestamp', full_name='sparkplug.Reading.timestamp', index=2,
-      number=3, type=9, cpp_type=9, label=2,
+      number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
   nested_types=[],
   enum_types=[
   ],
-  options=None,
+  serialized_options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
@@ -80,41 +79,41 @@ _READINGVALUE = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='name', full_name='sparkplug.ReadingValue.name', index=0,
-      number=1, type=9, cpp_type=9, label=2,
+      number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='value_string', full_name='sparkplug.ReadingValue.value_string', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='value_int', full_name='sparkplug.ReadingValue.value_int', index=2,
       number=3, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='value_double', full_name='sparkplug.ReadingValue.value_double', index=3,
       number=4, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
   nested_types=[],
   enum_types=[
   ],
-  options=None,
+  serialized_options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
     _descriptor.OneofDescriptor(
@@ -139,16 +138,16 @@ _READINGSLIST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
   nested_types=[],
   enum_types=[
   ],
-  options=None,
+  serialized_options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
@@ -170,6 +169,7 @@ _READINGSLIST.fields_by_name['readings'].message_type = _READING
 DESCRIPTOR.message_types_by_name['Reading'] = _READING
 DESCRIPTOR.message_types_by_name['ReadingValue'] = _READINGVALUE
 DESCRIPTOR.message_types_by_name['ReadingsList'] = _READINGSLIST
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Reading = _reflection.GeneratedProtocolMessageType('Reading', (_message.Message,), dict(
   DESCRIPTOR = _READING,
