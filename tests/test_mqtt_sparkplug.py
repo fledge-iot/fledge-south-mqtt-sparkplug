@@ -30,7 +30,7 @@ def test_plugin_contract():
 def test_plugin_info():
     assert mqtt_sparkplug.plugin_info() == {
         'name': plugin_name,
-        'version': '2.5.0',
+        'version': '2.6.0',
         'mode': 'async',
         'type': 'south',
         'interface': '1.0',
@@ -39,7 +39,9 @@ def test_plugin_info():
 
 
 def test_plugin_init():
-    assert mqtt_sparkplug.plugin_init(config) == config
+    with patch.object(mqtt_sparkplug, 'MqttSubscriberClient', return_value=None):
+        config['_mqtt'] = None
+        assert mqtt_sparkplug.plugin_init(config) == config
 
 
 @pytest.mark.skip(reason="To be implemented")
