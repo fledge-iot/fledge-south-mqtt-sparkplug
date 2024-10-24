@@ -5,7 +5,6 @@
 # FLEDGE_END
 
 """ Module for MQTT Sparkplug B Python async plugin """
-
 import asyncio
 import copy
 import logging
@@ -16,7 +15,6 @@ import paho.mqtt.client as mqtt
 from fledge.common import logger
 
 try:
-    # from fledge.plugins.south.mqtt_sparkplug import mqtt_sparkplug as ms
     from fledge.plugins.south.mqtt_sparkplug.sparkplug_b import sparkplug_b_pb2
 except:
     # FIXME: Import sparkplug_b_pb2 in a better way for unit tests
