@@ -39,7 +39,9 @@ def test_plugin_info():
 
 
 def test_plugin_init():
-    assert mqtt_sparkplug.plugin_init(config) == config
+    with patch.object(mqtt_sparkplug, 'MqttSubscriberClient', return_value=None):
+        config['_mqtt'] = None
+        assert mqtt_sparkplug.plugin_init(config) == config
 
 
 @pytest.mark.skip(reason="To be implemented")

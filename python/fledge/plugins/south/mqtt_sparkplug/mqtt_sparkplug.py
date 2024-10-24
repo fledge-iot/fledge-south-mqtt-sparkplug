@@ -4,17 +4,15 @@
 # See: http://fledge-iot.readthedocs.io/
 # FLEDGE_END
 
-""" Module for MQTT Sparkplug Python async plugin """
-
+""" Module for MQTT Sparkplug B Python async plugin """
 import asyncio
 import copy
 import logging
-
-from fledge.common import logger
-import async_ingest
-
-import paho.mqtt.client as mqtt
 from datetime import datetime, timezone
+
+import async_ingest
+import paho.mqtt.client as mqtt
+from fledge.common import logger
 
 try:
     from fledge.plugins.south.mqtt_sparkplug.sparkplug_b import sparkplug_b_pb2
@@ -22,10 +20,20 @@ except:
     # FIXME: Import sparkplug_b_pb2 in a better way for unit tests
     pass
 
-__author__ = "Jon Scott"
-__copyright__ = "Copyright (c) 2018 OSIsoft, LLC"
+__author__ = (
+    "Jon Scott (OSIsoft), "
+    "Ashish Jabble (Dianomic)"
+)
+
+__copyright__ = (
+    "Copyright (c) 2018 OSIsoft, LLC, "
+    "Copyright (c) 2024 Dianomic Systems, Inc."
+)
+
 __license__ = "Apache 2.0"
 __version__ = "${VERSION}"
+
+_LOGGER = logger.setup(__name__, level=logging.INFO)
 
 _PLUGIN_NAME = 'MQTT Sparkplug'
 _DEFAULT_CONFIG = {
@@ -80,17 +88,9 @@ _DEFAULT_CONFIG = {
     },
 }
 
-_LOGGER = logger.setup(__name__, level=logging.INFO)
-_client = None
-_callback_event_loop = None
-_topic = None
-_serverURL = None
-_assetName = None
-
 c_callback = None
 c_ingest_ref = None
 loop = None
-t = None
 
 
 def plugin_info():
@@ -120,6 +120,7 @@ def plugin_init(config):
     Raises:
     """
     handle = copy.deepcopy(config)
+    handle['_mqtt'] = MqttSubscriberClient(handle)
     return handle
 
 
@@ -134,32 +135,15 @@ def plugin_start(handle):
     Raises:
         TimeoutError
     """
-    global _client
-    global _topic
-    global _serverURL
-    global _assetName
-
-    # Get connection parameters from configuration
-    user = handle['user']['value']
-    password = handle['password']['value']
-    _serverURL = handle['url']['value']
-    port = handle['port']['value']
-
-    # Save the topic of interest for later - will be used in on_connect()
-    _topic = handle['topic']['value']
-    _assetName = handle['assetName']['value']
-
+    global loop
+    loop = asyncio.new_event_loop()
     # Create a connection to the MQTT server
     try:
-        _client = mqtt.Client()
-        _client.on_connect = on_connect
-        _client.on_message = on_message
-        _client.username_pw_set(user, password)
-        _client.connect(_serverURL, int(port), 60)
-    except Exception as e:
-        _LOGGER.error("Error in establishing a connection to MQTT Server: " + str(e))
-
-    _client.loop_start()
+        _mqtt = handle["_mqtt"]
+        _mqtt.loop = loop
+        _mqtt.start()
+    except Exception as ex:
+        _LOGGER.error("Error establishing connection to MQTT server: {}".format(str(ex)))
 
 
 def plugin_reconfigure(handle, new_config):
@@ -193,14 +177,18 @@ def plugin_shutdown(handle):
     Returns:
         plugin shutdown
     """
-    global _client
-    global _callback_event_loop
+    global loop
+    try:
+        _mqtt = handle["_mqtt"]
+        _mqtt.stop()
 
-    _client.loop_stop(force=False)
-    if _callback_event_loop is not None:
-        _callback_event_loop.close()
-        _callback_event_loop = None
-    _LOGGER.info('{} has shut down.'.format(_PLUGIN_NAME))
+        loop.stop()
+        loop = None
+        _mqtt = None
+    except Exception as ex:
+        _LOGGER.error("Error shutting down connection to MQTT server: {}".format(str(ex)))
+    else:
+        _LOGGER.info('{} plugin shut down.'.format(_PLUGIN_NAME))
 
 
 def plugin_register_ingest(handle, callback, ingest_ref):
@@ -216,60 +204,97 @@ def plugin_register_ingest(handle, callback, ingest_ref):
     c_ingest_ref = ingest_ref
 
 
-# MQTT Server Connection Callback
-# The callback for when the client receives a CONNACK response from the server.
-def on_connect(client, userdata, flags, rc):
-    # Subscribing in on_connect() means that if we lose the connection and
-    # reconnect then subscriptions will be renewed.
-    global _topic
-    global _serverURL
-    _LOGGER.info('{} plugin has connected to {}.'.format(_PLUGIN_NAME, str(_serverURL)))
+class MqttSubscriberClient(object):
+    """ mqtt subscriber """
 
-    client.subscribe(_topic)
-    _LOGGER.info('{} plugin has subscribed to {}.'.format(_PLUGIN_NAME, str(_topic)))
+    __slots__ = ['mqtt_client', 'broker_host', 'broker_port', 'username', 'password', 'topic',
+                 'asset_name', 'loop']
 
+    def __init__(self, config):
+        self.mqtt_client = mqtt.Client()
+        self.broker_host = config['url']['value']
+        self.broker_port = int(config['port']['value'])
+        self.username = config['user']['value']
+        self.password = config['password']['value']
+        self.topic = config['topic']['value']
+        self.asset_name = config['assetName']['value']
 
-async def save_data(data):
-    async_ingest.ingest_callback(c_callback, c_ingest_ref, data)
+    def on_connect(self, client, userdata, flags, rc):
+        """ The callback for when the client receives a CONNACK response from the server """
 
+        if self.topic.startswith('spBv1.0'):
+            client.connected_flag = True
+            # subscribe at given Topic on connect
+            client.subscribe(self.topic)
+            _LOGGER.info("MQTT connection established. Subscribed to topic: {}".format(self.topic))
+        else:
+            _LOGGER.error("The topic {} is NOT a Sparkplug B v1.0 topic.".format(self.topic))
 
-# MQTT Message Received Callback
-# The callback for when a PUBLISH message is received from the server.
-def on_message(client, userdata, msg):
-    global _callback_event_loop
-    global _assetName
-    try:
-        if _callback_event_loop is None:
-            asyncio.set_event_loop(asyncio.new_event_loop())
-            _callback_event_loop = asyncio.get_event_loop()
-        # Protobuf message structure
-        sparkplug_payload = sparkplug_b_pb2.Payload()
-        sparkplug_payload.ParseFromString(msg.payload)
+    def on_disconnect(self, client, userdata, rc):
+        pass
 
-        for metric in sparkplug_payload.metrics:
-            value = "Unknown"
-            if metric.HasField("bool_value"):
-                """ bool value cast to int as internal. See FOGL-8067 """
-                value = metric.bool_value
-            elif metric.HasField("float_value"):
-                value = metric.float_value
-            elif metric.HasField("int_value"):
-                value = metric.int_value
-            elif metric.HasField("string_value"):
-                value = metric.string_value
-            # TODO: FOGL- 9198 - Handle other data types
-            if value == "Unknown":
-                _LOGGER.warning("Ignoring metric '{}' due to unknown type. "
-                                "Only supported types are: float, integer, string, bool.".format(metric.name))
-                continue
-            data = {
-                'asset': _assetName,
-                'timestamp': datetime.fromtimestamp(metric.timestamp, tz=timezone.utc
-                                                    ).strftime('%Y-%m-%d %H:%M:%S.%s'),
-                'readings': {metric.name: value}
-            }
-            _callback_event_loop.run_until_complete(save_data(data))
-    except Exception as ex:
-        msg = ("Message payload must comply with spBv1.0 standards. Please ensure that the format and structure of the "
-               "payload adhere to the specified requirements.")
-        _LOGGER.error(ex, msg)
+    def on_message(self, client, userdata, msg):
+        """ The callback for when a PUBLISH message is received from the server """
+
+        _LOGGER.debug("MQTT message received - Topic: {}, Payload: {}".format(
+            str(msg.topic), str(msg.payload)))
+        try:
+            # Protobuf message structure
+            sparkplug_payload = sparkplug_b_pb2.Payload()
+            sparkplug_payload.ParseFromString(msg.payload)
+
+            for metric in sparkplug_payload.metrics:
+                value = "Unknown"
+                if metric.HasField("bool_value"):
+                    """ bool value cast to int as internal. See FOGL-8067 """
+                    value = metric.bool_value
+                elif metric.HasField("float_value"):
+                    value = metric.float_value
+                elif metric.HasField("int_value"):
+                    value = metric.int_value
+                elif metric.HasField("string_value"):
+                    value = metric.string_value
+                # TODO: FOGL- 9198 - Handle other data types
+                if value == "Unknown":
+                    _LOGGER.warning("Ignoring metric '{}' due to unknown type. "
+                                    "Only supported types are: float, integer, string, bool.".format(metric.name))
+                    continue
+
+                self.save(metric, value)
+        except Exception as ex:
+            msg = (
+                "Message payload must comply with spBv1.0 standards. Please ensure that the format and structure of the "
+                "payload adhere to the specified requirements.")
+            _LOGGER.error(ex, msg)
+
+    def on_subscribe(self, client, userdata, mid, granted_qos):
+        pass
+
+    def on_unsubscribe(self, client, userdata, mid):
+        pass
+
+    def start(self):
+        if self.username and len(self.username.strip()) and self.password and len(self.password):
+            self.mqtt_client.username_pw_set(self.username, password=self.password)
+        # event callbacks
+        self.mqtt_client.on_connect = self.on_connect
+        self.mqtt_client.on_subscribe = self.on_subscribe
+        self.mqtt_client.on_message = self.on_message
+        self.mqtt_client.on_disconnect = self.on_disconnect
+        self.mqtt_client.connect(self.broker_host, self.broker_port)
+        _LOGGER.info("Attempting to connect to MQTT broker at {}:{}...".format(self.broker_host, self.broker_port))
+
+        self.mqtt_client.loop_start()
+
+    def stop(self):
+        self.mqtt_client.disconnect()
+        self.mqtt_client.loop_stop()
+
+    def save(self, metric, value):
+        data = {
+            'asset': self.asset_name,
+            'timestamp': datetime.fromtimestamp(metric.timestamp, tz=timezone.utc
+                                                ).strftime('%Y-%m-%d %H:%M:%S.%s'),
+            'readings': {metric.name: value}
+        }
+        async_ingest.ingest_callback(c_callback, c_ingest_ref, data)
