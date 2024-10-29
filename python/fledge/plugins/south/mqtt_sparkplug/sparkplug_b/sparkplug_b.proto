@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package sparkplug;
+
+message Metric {
+    string name = 1;                   // The name of the metric
+    int64 timestamp = 2;               // The timestamp in milliseconds since epoch
+
+    oneof value {
+        bool bool_value = 3;           // Boolean value
+        float float_value = 4;         // Float value
+        int64 int_value = 5;           // Integer value
+        string string_value = 6;       // String value
+        // TODO: FOGL-9198 T_FLOAT_ARRAY, T_DP_DICT, T_DP_LIST, T_IMAGE, T_DATABUFFER
+    }
+}
+
+message Payload {
+    repeated Metric metrics = 1;       // List of metrics
+}
