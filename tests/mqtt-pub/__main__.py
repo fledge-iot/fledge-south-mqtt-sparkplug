@@ -100,7 +100,7 @@ def create_ddata_payload():
         elif metric["type"] == "string":
             m.string_value = metric["value"]
         elif metric["type"] == "boolean":
-            m.bool_value = metric["value"]
+            m.boolean_value = metric["value"]
         else:
             print(f"Ignoring metric '{m.name}' due to unknown type.")
             continue
@@ -128,7 +128,7 @@ def create_ddeath_payload():
         m = payload.metrics.add()  # Add a new Metric to the Payload
         m.name = metric["name"]
         m.timestamp = metric["timestamp"]
-        m.bool_value = metric["value"]
+        m.boolean_value = metric["value"]
     # Now you can serialize the payload or use it as needed
     binary_data = payload.SerializeToString()
     return binary_data
