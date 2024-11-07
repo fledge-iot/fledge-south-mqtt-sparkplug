@@ -4,7 +4,7 @@
 
 import random
 import time
-from . import sparkplug_b_pb2
+import sparkplug_b_pb2
 import paho.mqtt.client as mqtt
 
 
