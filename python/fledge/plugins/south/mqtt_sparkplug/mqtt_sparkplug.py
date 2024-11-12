@@ -5,7 +5,6 @@
 # FLEDGE_END
 
 """ Module for MQTT Sparkplug B Python async plugin """
-import json
 import asyncio
 import copy
 import logging
@@ -254,9 +253,7 @@ class MqttSubscriberClient(object):
                 elif metric.HasField("int_value"):
                     value = metric.int_value
                 elif metric.HasField("string_value"):
-                    # value = metric.string_value
-                    # NOTE: handle unescaping the value
-                    value = json.loads(metric.string_value)
+                    value = metric.string_value
                 # TODO: FOGL- 9198 - Handle other data types
                 if value == "Unknown":
                     _LOGGER.warning("Ignoring metric '{}' due to unknown type. "
