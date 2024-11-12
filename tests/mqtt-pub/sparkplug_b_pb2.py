@@ -17,63 +17,21 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='sparkplug_b.proto',
   package='sparkplug',
-  syntax='proto3',
+  syntax='proto2',
   serialized_options=None,
-  serialized_pb=_b('\n\x11sparkplug_b.proto\x12\tsparkplug\"\x8c\x01\n\x06Metric\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12\x14\n\nbool_value\x18\x03 \x01(\x08H\x00\x12\x15\n\x0b\x66loat_value\x18\x04 \x01(\x02H\x00\x12\x13\n\tint_value\x18\x05 \x01(\x03H\x00\x12\x16\n\x0cstring_value\x18\x06 \x01(\tH\x00\x42\x07\n\x05value\"-\n\x07Payload\x12\"\n\x07metrics\x18\x01 \x03(\x0b\x32\x11.sparkplug.Metricb\x06proto3')
+  serialized_pb=_b('\n\x11sparkplug_b.proto\x12\tsparkplug\"\xde\x13\n\x07Payload\x12\x11\n\ttimestamp\x18\x01 \x01(\x04\x12*\n\x07metrics\x18\x02 \x03(\x0b\x32\x19.sparkplug.Payload.Metric\x12\x0b\n\x03seq\x18\x03 \x01(\x04\x12\x0c\n\x04uuid\x18\x04 \x01(\t\x12\x0c\n\x04\x62ody\x18\x05 \x01(\x0c\x1a\xf6\x03\n\x08Template\x12\x0f\n\x07version\x18\x01 \x01(\t\x12*\n\x07metrics\x18\x02 \x03(\x0b\x32\x19.sparkplug.Payload.Metric\x12\x39\n\nparameters\x18\x03 \x03(\x0b\x32%.sparkplug.Payload.Template.Parameter\x12\x14\n\x0ctemplate_ref\x18\x04 \x01(\t\x12\x15\n\ris_definition\x18\x05 \x01(\x08\x1a\xba\x02\n\tParameter\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04type\x18\x02 \x01(\r\x12\x13\n\tint_value\x18\x03 \x01(\rH\x00\x12\x14\n\nlong_value\x18\x04 \x01(\x04H\x00\x12\x15\n\x0b\x66loat_value\x18\x05 \x01(\x02H\x00\x12\x16\n\x0c\x64ouble_value\x18\x06 \x01(\x01H\x00\x12\x17\n\rboolean_value\x18\x07 \x01(\x08H\x00\x12\x16\n\x0cstring_value\x18\x08 \x01(\tH\x00\x12X\n\x0f\x65xtension_value\x18\t \x01(\x0b\x32=.sparkplug.Payload.Template.Parameter.ParameterValueExtensionH\x00\x1a#\n\x17ParameterValueExtension*\x08\x08\x01\x10\x80\x80\x80\x80\x02\x42\x07\n\x05value*\x08\x08\x06\x10\x80\x80\x80\x80\x02\x1a\xe7\x03\n\x07\x44\x61taSet\x12\x16\n\x0enum_of_columns\x18\x01 \x01(\x04\x12\x0f\n\x07\x63olumns\x18\x02 \x03(\t\x12\r\n\x05types\x18\x03 \x03(\r\x12,\n\x04rows\x18\x04 \x03(\x0b\x32\x1e.sparkplug.Payload.DataSet.Row\x1a\x9f\x02\n\x0c\x44\x61taSetValue\x12\x13\n\tint_value\x18\x01 \x01(\rH\x00\x12\x14\n\nlong_value\x18\x02 \x01(\x04H\x00\x12\x15\n\x0b\x66loat_value\x18\x03 \x01(\x02H\x00\x12\x16\n\x0c\x64ouble_value\x18\x04 \x01(\x01H\x00\x12\x17\n\rboolean_value\x18\x05 \x01(\x08H\x00\x12\x16\n\x0cstring_value\x18\x06 \x01(\tH\x00\x12X\n\x0f\x65xtension_value\x18\x07 \x01(\x0b\x32=.sparkplug.Payload.DataSet.DataSetValue.DataSetValueExtensionH\x00\x1a!\n\x15\x44\x61taSetValueExtension*\x08\x08\x01\x10\x80\x80\x80\x80\x02\x42\x07\n\x05value\x1aJ\n\x03Row\x12\x39\n\x08\x65lements\x18\x01 \x03(\x0b\x32\'.sparkplug.Payload.DataSet.DataSetValue*\x08\x08\x02\x10\x80\x80\x80\x80\x02*\x08\x08\x05\x10\x80\x80\x80\x80\x02\x1a\xb9\x03\n\rPropertyValue\x12\x0c\n\x04type\x18\x01 \x01(\r\x12\x0f\n\x07is_null\x18\x02 \x01(\x08\x12\x13\n\tint_value\x18\x03 \x01(\rH\x00\x12\x14\n\nlong_value\x18\x04 \x01(\x04H\x00\x12\x15\n\x0b\x66loat_value\x18\x05 \x01(\x02H\x00\x12\x16\n\x0c\x64ouble_value\x18\x06 \x01(\x01H\x00\x12\x17\n\rboolean_value\x18\x07 \x01(\x08H\x00\x12\x16\n\x0cstring_value\x18\x08 \x01(\tH\x00\x12;\n\x11propertyset_value\x18\t \x01(\x0b\x32\x1e.sparkplug.Payload.PropertySetH\x00\x12@\n\x12propertysets_value\x18\n \x01(\x0b\x32\".sparkplug.Payload.PropertySetListH\x00\x12R\n\x0f\x65xtension_value\x18\x0b \x01(\x0b\x32\x37.sparkplug.Payload.PropertyValue.PropertyValueExtensionH\x00\x1a\"\n\x16PropertyValueExtension*\x08\x08\x01\x10\x80\x80\x80\x80\x02\x42\x07\n\x05value\x1aW\n\x0bPropertySet\x12\x0c\n\x04keys\x18\x01 \x03(\t\x12\x30\n\x06values\x18\x02 \x03(\x0b\x32 .sparkplug.Payload.PropertyValue*\x08\x08\x03\x10\x80\x80\x80\x80\x02\x1aP\n\x0fPropertySetList\x12\x33\n\x0bpropertyset\x18\x01 \x03(\x0b\x32\x1e.sparkplug.Payload.PropertySet*\x08\x08\x02\x10\x80\x80\x80\x80\x02\x1a\xa4\x01\n\x08MetaData\x12\x15\n\ris_multi_part\x18\x01 \x01(\x08\x12\x14\n\x0c\x63ontent_type\x18\x02 \x01(\t\x12\x0c\n\x04size\x18\x03 \x01(\x04\x12\x0b\n\x03seq\x18\x04 \x01(\x04\x12\x11\n\tfile_name\x18\x05 \x01(\t\x12\x11\n\tfile_type\x18\x06 \x01(\t\x12\x0b\n\x03md5\x18\x07 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x08 \x01(\t*\x08\x08\t\x10\x80\x80\x80\x80\x02\x1a\xef\x04\n\x06Metric\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05\x61lias\x18\x02 \x01(\x04\x12\x11\n\ttimestamp\x18\x03 \x01(\x04\x12\x10\n\x08\x64\x61tatype\x18\x04 \x01(\r\x12\x15\n\ris_historical\x18\x05 \x01(\x08\x12\x14\n\x0cis_transient\x18\x06 \x01(\x08\x12\x0f\n\x07is_null\x18\x07 \x01(\x08\x12-\n\x08metadata\x18\x08 \x01(\x0b\x32\x1b.sparkplug.Payload.MetaData\x12\x32\n\nproperties\x18\t \x01(\x0b\x32\x1e.sparkplug.Payload.PropertySet\x12\x13\n\tint_value\x18\n \x01(\rH\x00\x12\x14\n\nlong_value\x18\x0b \x01(\x04H\x00\x12\x15\n\x0b\x66loat_value\x18\x0c \x01(\x02H\x00\x12\x16\n\x0c\x64ouble_value\x18\r \x01(\x01H\x00\x12\x17\n\rboolean_value\x18\x0e \x01(\x08H\x00\x12\x16\n\x0cstring_value\x18\x0f \x01(\tH\x00\x12\x15\n\x0b\x62ytes_value\x18\x10 \x01(\x0cH\x00\x12\x33\n\rdataset_value\x18\x11 \x01(\x0b\x32\x1a.sparkplug.Payload.DataSetH\x00\x12\x35\n\x0etemplate_value\x18\x12 \x01(\x0b\x32\x1b.sparkplug.Payload.TemplateH\x00\x12I\n\x0f\x65xtension_value\x18\x13 \x01(\x0b\x32..sparkplug.Payload.Metric.MetricValueExtensionH\x00\x1a \n\x14MetricValueExtension*\x08\x08\x01\x10\x80\x80\x80\x80\x02\x42\x07\n\x05value*\x08\x08\x06\x10\x80\x80\x80\x80\x02')
 )
 
 
 
 
-_METRIC = _descriptor.Descriptor(
-  name='Metric',
-  full_name='sparkplug.Metric',
+_PAYLOAD_TEMPLATE_PARAMETER_PARAMETERVALUEEXTENSION = _descriptor.Descriptor(
+  name='ParameterValueExtension',
+  full_name='sparkplug.Payload.Template.Parameter.ParameterValueExtension',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='sparkplug.Metric.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='timestamp', full_name='sparkplug.Metric.timestamp', index=1,
-      number=2, type=3, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='bool_value', full_name='sparkplug.Metric.bool_value', index=2,
-      number=3, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='float_value', full_name='sparkplug.Metric.float_value', index=3,
-      number=4, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='int_value', full_name='sparkplug.Metric.int_value', index=4,
-      number=5, type=3, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='string_value', full_name='sparkplug.Metric.string_value', index=5,
-      number=6, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -81,28 +39,269 @@ _METRIC = _descriptor.Descriptor(
   enum_types=[
   ],
   serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
+  is_extendable=True,
+  syntax='proto2',
+  extension_ranges=[(1, 536870912), ],
   oneofs=[
-    _descriptor.OneofDescriptor(
-      name='value', full_name='sparkplug.Metric.value',
-      index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=33,
-  serialized_end=173,
+  serialized_start=597,
+  serialized_end=632,
 )
 
-
-_PAYLOAD = _descriptor.Descriptor(
-  name='Payload',
-  full_name='sparkplug.Payload',
+_PAYLOAD_TEMPLATE_PARAMETER = _descriptor.Descriptor(
+  name='Parameter',
+  full_name='sparkplug.Payload.Template.Parameter',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='metrics', full_name='sparkplug.Payload.metrics', index=0,
+      name='name', full_name='sparkplug.Payload.Template.Parameter.name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='type', full_name='sparkplug.Payload.Template.Parameter.type', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='int_value', full_name='sparkplug.Payload.Template.Parameter.int_value', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='long_value', full_name='sparkplug.Payload.Template.Parameter.long_value', index=3,
+      number=4, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='float_value', full_name='sparkplug.Payload.Template.Parameter.float_value', index=4,
+      number=5, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='double_value', full_name='sparkplug.Payload.Template.Parameter.double_value', index=5,
+      number=6, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='boolean_value', full_name='sparkplug.Payload.Template.Parameter.boolean_value', index=6,
+      number=7, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='string_value', full_name='sparkplug.Payload.Template.Parameter.string_value', index=7,
+      number=8, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='extension_value', full_name='sparkplug.Payload.Template.Parameter.extension_value', index=8,
+      number=9, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_PAYLOAD_TEMPLATE_PARAMETER_PARAMETERVALUEEXTENSION, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+    _descriptor.OneofDescriptor(
+      name='value', full_name='sparkplug.Payload.Template.Parameter.value',
+      index=0, containing_type=None, fields=[]),
+  ],
+  serialized_start=327,
+  serialized_end=641,
+)
+
+_PAYLOAD_TEMPLATE = _descriptor.Descriptor(
+  name='Template',
+  full_name='sparkplug.Payload.Template',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='version', full_name='sparkplug.Payload.Template.version', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='metrics', full_name='sparkplug.Payload.Template.metrics', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='parameters', full_name='sparkplug.Payload.Template.parameters', index=2,
+      number=3, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='template_ref', full_name='sparkplug.Payload.Template.template_ref', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='is_definition', full_name='sparkplug.Payload.Template.is_definition', index=4,
+      number=5, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_PAYLOAD_TEMPLATE_PARAMETER, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=True,
+  syntax='proto2',
+  extension_ranges=[(6, 536870912), ],
+  oneofs=[
+  ],
+  serialized_start=149,
+  serialized_end=651,
+)
+
+_PAYLOAD_DATASET_DATASETVALUE_DATASETVALUEEXTENSION = _descriptor.Descriptor(
+  name='DataSetValueExtension',
+  full_name='sparkplug.Payload.DataSet.DataSetValue.DataSetValueExtension',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=True,
+  syntax='proto2',
+  extension_ranges=[(1, 536870912), ],
+  oneofs=[
+  ],
+  serialized_start=1013,
+  serialized_end=1046,
+)
+
+_PAYLOAD_DATASET_DATASETVALUE = _descriptor.Descriptor(
+  name='DataSetValue',
+  full_name='sparkplug.Payload.DataSet.DataSetValue',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='int_value', full_name='sparkplug.Payload.DataSet.DataSetValue.int_value', index=0,
+      number=1, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='long_value', full_name='sparkplug.Payload.DataSet.DataSetValue.long_value', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='float_value', full_name='sparkplug.Payload.DataSet.DataSetValue.float_value', index=2,
+      number=3, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='double_value', full_name='sparkplug.Payload.DataSet.DataSetValue.double_value', index=3,
+      number=4, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='boolean_value', full_name='sparkplug.Payload.DataSet.DataSetValue.boolean_value', index=4,
+      number=5, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='string_value', full_name='sparkplug.Payload.DataSet.DataSetValue.string_value', index=5,
+      number=6, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='extension_value', full_name='sparkplug.Payload.DataSet.DataSetValue.extension_value', index=6,
+      number=7, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_PAYLOAD_DATASET_DATASETVALUE_DATASETVALUEEXTENSION, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+    _descriptor.OneofDescriptor(
+      name='value', full_name='sparkplug.Payload.DataSet.DataSetValue.value',
+      index=0, containing_type=None, fields=[]),
+  ],
+  serialized_start=768,
+  serialized_end=1055,
+)
+
+_PAYLOAD_DATASET_ROW = _descriptor.Descriptor(
+  name='Row',
+  full_name='sparkplug.Payload.DataSet.Row',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='elements', full_name='sparkplug.Payload.DataSet.Row.elements', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -115,45 +314,829 @@ _PAYLOAD = _descriptor.Descriptor(
   enum_types=[
   ],
   serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
+  is_extendable=True,
+  syntax='proto2',
+  extension_ranges=[(2, 536870912), ],
   oneofs=[
   ],
-  serialized_start=175,
-  serialized_end=220,
+  serialized_start=1057,
+  serialized_end=1131,
 )
 
-_METRIC.oneofs_by_name['value'].fields.append(
-  _METRIC.fields_by_name['bool_value'])
-_METRIC.fields_by_name['bool_value'].containing_oneof = _METRIC.oneofs_by_name['value']
-_METRIC.oneofs_by_name['value'].fields.append(
-  _METRIC.fields_by_name['float_value'])
-_METRIC.fields_by_name['float_value'].containing_oneof = _METRIC.oneofs_by_name['value']
-_METRIC.oneofs_by_name['value'].fields.append(
-  _METRIC.fields_by_name['int_value'])
-_METRIC.fields_by_name['int_value'].containing_oneof = _METRIC.oneofs_by_name['value']
-_METRIC.oneofs_by_name['value'].fields.append(
-  _METRIC.fields_by_name['string_value'])
-_METRIC.fields_by_name['string_value'].containing_oneof = _METRIC.oneofs_by_name['value']
-_PAYLOAD.fields_by_name['metrics'].message_type = _METRIC
-DESCRIPTOR.message_types_by_name['Metric'] = _METRIC
+_PAYLOAD_DATASET = _descriptor.Descriptor(
+  name='DataSet',
+  full_name='sparkplug.Payload.DataSet',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='num_of_columns', full_name='sparkplug.Payload.DataSet.num_of_columns', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='columns', full_name='sparkplug.Payload.DataSet.columns', index=1,
+      number=2, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='types', full_name='sparkplug.Payload.DataSet.types', index=2,
+      number=3, type=13, cpp_type=3, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='rows', full_name='sparkplug.Payload.DataSet.rows', index=3,
+      number=4, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_PAYLOAD_DATASET_DATASETVALUE, _PAYLOAD_DATASET_ROW, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=True,
+  syntax='proto2',
+  extension_ranges=[(5, 536870912), ],
+  oneofs=[
+  ],
+  serialized_start=654,
+  serialized_end=1141,
+)
+
+_PAYLOAD_PROPERTYVALUE_PROPERTYVALUEEXTENSION = _descriptor.Descriptor(
+  name='PropertyValueExtension',
+  full_name='sparkplug.Payload.PropertyValue.PropertyValueExtension',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=True,
+  syntax='proto2',
+  extension_ranges=[(1, 536870912), ],
+  oneofs=[
+  ],
+  serialized_start=1542,
+  serialized_end=1576,
+)
+
+_PAYLOAD_PROPERTYVALUE = _descriptor.Descriptor(
+  name='PropertyValue',
+  full_name='sparkplug.Payload.PropertyValue',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='type', full_name='sparkplug.Payload.PropertyValue.type', index=0,
+      number=1, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='is_null', full_name='sparkplug.Payload.PropertyValue.is_null', index=1,
+      number=2, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='int_value', full_name='sparkplug.Payload.PropertyValue.int_value', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='long_value', full_name='sparkplug.Payload.PropertyValue.long_value', index=3,
+      number=4, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='float_value', full_name='sparkplug.Payload.PropertyValue.float_value', index=4,
+      number=5, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='double_value', full_name='sparkplug.Payload.PropertyValue.double_value', index=5,
+      number=6, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='boolean_value', full_name='sparkplug.Payload.PropertyValue.boolean_value', index=6,
+      number=7, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='string_value', full_name='sparkplug.Payload.PropertyValue.string_value', index=7,
+      number=8, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='propertyset_value', full_name='sparkplug.Payload.PropertyValue.propertyset_value', index=8,
+      number=9, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='propertysets_value', full_name='sparkplug.Payload.PropertyValue.propertysets_value', index=9,
+      number=10, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='extension_value', full_name='sparkplug.Payload.PropertyValue.extension_value', index=10,
+      number=11, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_PAYLOAD_PROPERTYVALUE_PROPERTYVALUEEXTENSION, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+    _descriptor.OneofDescriptor(
+      name='value', full_name='sparkplug.Payload.PropertyValue.value',
+      index=0, containing_type=None, fields=[]),
+  ],
+  serialized_start=1144,
+  serialized_end=1585,
+)
+
+_PAYLOAD_PROPERTYSET = _descriptor.Descriptor(
+  name='PropertySet',
+  full_name='sparkplug.Payload.PropertySet',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='keys', full_name='sparkplug.Payload.PropertySet.keys', index=0,
+      number=1, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='values', full_name='sparkplug.Payload.PropertySet.values', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=True,
+  syntax='proto2',
+  extension_ranges=[(3, 536870912), ],
+  oneofs=[
+  ],
+  serialized_start=1587,
+  serialized_end=1674,
+)
+
+_PAYLOAD_PROPERTYSETLIST = _descriptor.Descriptor(
+  name='PropertySetList',
+  full_name='sparkplug.Payload.PropertySetList',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='propertyset', full_name='sparkplug.Payload.PropertySetList.propertyset', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=True,
+  syntax='proto2',
+  extension_ranges=[(2, 536870912), ],
+  oneofs=[
+  ],
+  serialized_start=1676,
+  serialized_end=1756,
+)
+
+_PAYLOAD_METADATA = _descriptor.Descriptor(
+  name='MetaData',
+  full_name='sparkplug.Payload.MetaData',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='is_multi_part', full_name='sparkplug.Payload.MetaData.is_multi_part', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='content_type', full_name='sparkplug.Payload.MetaData.content_type', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='size', full_name='sparkplug.Payload.MetaData.size', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='seq', full_name='sparkplug.Payload.MetaData.seq', index=3,
+      number=4, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='file_name', full_name='sparkplug.Payload.MetaData.file_name', index=4,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='file_type', full_name='sparkplug.Payload.MetaData.file_type', index=5,
+      number=6, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='md5', full_name='sparkplug.Payload.MetaData.md5', index=6,
+      number=7, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='description', full_name='sparkplug.Payload.MetaData.description', index=7,
+      number=8, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=True,
+  syntax='proto2',
+  extension_ranges=[(9, 536870912), ],
+  oneofs=[
+  ],
+  serialized_start=1759,
+  serialized_end=1923,
+)
+
+_PAYLOAD_METRIC_METRICVALUEEXTENSION = _descriptor.Descriptor(
+  name='MetricValueExtension',
+  full_name='sparkplug.Payload.Metric.MetricValueExtension',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=True,
+  syntax='proto2',
+  extension_ranges=[(1, 536870912), ],
+  oneofs=[
+  ],
+  serialized_start=2508,
+  serialized_end=2540,
+)
+
+_PAYLOAD_METRIC = _descriptor.Descriptor(
+  name='Metric',
+  full_name='sparkplug.Payload.Metric',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='name', full_name='sparkplug.Payload.Metric.name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='alias', full_name='sparkplug.Payload.Metric.alias', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='timestamp', full_name='sparkplug.Payload.Metric.timestamp', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='datatype', full_name='sparkplug.Payload.Metric.datatype', index=3,
+      number=4, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='is_historical', full_name='sparkplug.Payload.Metric.is_historical', index=4,
+      number=5, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='is_transient', full_name='sparkplug.Payload.Metric.is_transient', index=5,
+      number=6, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='is_null', full_name='sparkplug.Payload.Metric.is_null', index=6,
+      number=7, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='metadata', full_name='sparkplug.Payload.Metric.metadata', index=7,
+      number=8, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='properties', full_name='sparkplug.Payload.Metric.properties', index=8,
+      number=9, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='int_value', full_name='sparkplug.Payload.Metric.int_value', index=9,
+      number=10, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='long_value', full_name='sparkplug.Payload.Metric.long_value', index=10,
+      number=11, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='float_value', full_name='sparkplug.Payload.Metric.float_value', index=11,
+      number=12, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='double_value', full_name='sparkplug.Payload.Metric.double_value', index=12,
+      number=13, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='boolean_value', full_name='sparkplug.Payload.Metric.boolean_value', index=13,
+      number=14, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='string_value', full_name='sparkplug.Payload.Metric.string_value', index=14,
+      number=15, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='bytes_value', full_name='sparkplug.Payload.Metric.bytes_value', index=15,
+      number=16, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='dataset_value', full_name='sparkplug.Payload.Metric.dataset_value', index=16,
+      number=17, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='template_value', full_name='sparkplug.Payload.Metric.template_value', index=17,
+      number=18, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='extension_value', full_name='sparkplug.Payload.Metric.extension_value', index=18,
+      number=19, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_PAYLOAD_METRIC_METRICVALUEEXTENSION, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+    _descriptor.OneofDescriptor(
+      name='value', full_name='sparkplug.Payload.Metric.value',
+      index=0, containing_type=None, fields=[]),
+  ],
+  serialized_start=1926,
+  serialized_end=2549,
+)
+
+_PAYLOAD = _descriptor.Descriptor(
+  name='Payload',
+  full_name='sparkplug.Payload',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='timestamp', full_name='sparkplug.Payload.timestamp', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='metrics', full_name='sparkplug.Payload.metrics', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='seq', full_name='sparkplug.Payload.seq', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='sparkplug.Payload.uuid', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='body', full_name='sparkplug.Payload.body', index=4,
+      number=5, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_PAYLOAD_TEMPLATE, _PAYLOAD_DATASET, _PAYLOAD_PROPERTYVALUE, _PAYLOAD_PROPERTYSET, _PAYLOAD_PROPERTYSETLIST, _PAYLOAD_METADATA, _PAYLOAD_METRIC, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=True,
+  syntax='proto2',
+  extension_ranges=[(6, 536870912), ],
+  oneofs=[
+  ],
+  serialized_start=33,
+  serialized_end=2559,
+)
+
+_PAYLOAD_TEMPLATE_PARAMETER_PARAMETERVALUEEXTENSION.containing_type = _PAYLOAD_TEMPLATE_PARAMETER
+_PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['extension_value'].message_type = _PAYLOAD_TEMPLATE_PARAMETER_PARAMETERVALUEEXTENSION
+_PAYLOAD_TEMPLATE_PARAMETER.containing_type = _PAYLOAD_TEMPLATE
+_PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['int_value'])
+_PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['int_value'].containing_oneof = _PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value']
+_PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['long_value'])
+_PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['long_value'].containing_oneof = _PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value']
+_PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['float_value'])
+_PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['float_value'].containing_oneof = _PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value']
+_PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['double_value'])
+_PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['double_value'].containing_oneof = _PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value']
+_PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['boolean_value'])
+_PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['boolean_value'].containing_oneof = _PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value']
+_PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['string_value'])
+_PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['string_value'].containing_oneof = _PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value']
+_PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['extension_value'])
+_PAYLOAD_TEMPLATE_PARAMETER.fields_by_name['extension_value'].containing_oneof = _PAYLOAD_TEMPLATE_PARAMETER.oneofs_by_name['value']
+_PAYLOAD_TEMPLATE.fields_by_name['metrics'].message_type = _PAYLOAD_METRIC
+_PAYLOAD_TEMPLATE.fields_by_name['parameters'].message_type = _PAYLOAD_TEMPLATE_PARAMETER
+_PAYLOAD_TEMPLATE.containing_type = _PAYLOAD
+_PAYLOAD_DATASET_DATASETVALUE_DATASETVALUEEXTENSION.containing_type = _PAYLOAD_DATASET_DATASETVALUE
+_PAYLOAD_DATASET_DATASETVALUE.fields_by_name['extension_value'].message_type = _PAYLOAD_DATASET_DATASETVALUE_DATASETVALUEEXTENSION
+_PAYLOAD_DATASET_DATASETVALUE.containing_type = _PAYLOAD_DATASET
+_PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_DATASET_DATASETVALUE.fields_by_name['int_value'])
+_PAYLOAD_DATASET_DATASETVALUE.fields_by_name['int_value'].containing_oneof = _PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value']
+_PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_DATASET_DATASETVALUE.fields_by_name['long_value'])
+_PAYLOAD_DATASET_DATASETVALUE.fields_by_name['long_value'].containing_oneof = _PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value']
+_PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_DATASET_DATASETVALUE.fields_by_name['float_value'])
+_PAYLOAD_DATASET_DATASETVALUE.fields_by_name['float_value'].containing_oneof = _PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value']
+_PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_DATASET_DATASETVALUE.fields_by_name['double_value'])
+_PAYLOAD_DATASET_DATASETVALUE.fields_by_name['double_value'].containing_oneof = _PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value']
+_PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_DATASET_DATASETVALUE.fields_by_name['boolean_value'])
+_PAYLOAD_DATASET_DATASETVALUE.fields_by_name['boolean_value'].containing_oneof = _PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value']
+_PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_DATASET_DATASETVALUE.fields_by_name['string_value'])
+_PAYLOAD_DATASET_DATASETVALUE.fields_by_name['string_value'].containing_oneof = _PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value']
+_PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_DATASET_DATASETVALUE.fields_by_name['extension_value'])
+_PAYLOAD_DATASET_DATASETVALUE.fields_by_name['extension_value'].containing_oneof = _PAYLOAD_DATASET_DATASETVALUE.oneofs_by_name['value']
+_PAYLOAD_DATASET_ROW.fields_by_name['elements'].message_type = _PAYLOAD_DATASET_DATASETVALUE
+_PAYLOAD_DATASET_ROW.containing_type = _PAYLOAD_DATASET
+_PAYLOAD_DATASET.fields_by_name['rows'].message_type = _PAYLOAD_DATASET_ROW
+_PAYLOAD_DATASET.containing_type = _PAYLOAD
+_PAYLOAD_PROPERTYVALUE_PROPERTYVALUEEXTENSION.containing_type = _PAYLOAD_PROPERTYVALUE
+_PAYLOAD_PROPERTYVALUE.fields_by_name['propertyset_value'].message_type = _PAYLOAD_PROPERTYSET
+_PAYLOAD_PROPERTYVALUE.fields_by_name['propertysets_value'].message_type = _PAYLOAD_PROPERTYSETLIST
+_PAYLOAD_PROPERTYVALUE.fields_by_name['extension_value'].message_type = _PAYLOAD_PROPERTYVALUE_PROPERTYVALUEEXTENSION
+_PAYLOAD_PROPERTYVALUE.containing_type = _PAYLOAD
+_PAYLOAD_PROPERTYVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_PROPERTYVALUE.fields_by_name['int_value'])
+_PAYLOAD_PROPERTYVALUE.fields_by_name['int_value'].containing_oneof = _PAYLOAD_PROPERTYVALUE.oneofs_by_name['value']
+_PAYLOAD_PROPERTYVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_PROPERTYVALUE.fields_by_name['long_value'])
+_PAYLOAD_PROPERTYVALUE.fields_by_name['long_value'].containing_oneof = _PAYLOAD_PROPERTYVALUE.oneofs_by_name['value']
+_PAYLOAD_PROPERTYVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_PROPERTYVALUE.fields_by_name['float_value'])
+_PAYLOAD_PROPERTYVALUE.fields_by_name['float_value'].containing_oneof = _PAYLOAD_PROPERTYVALUE.oneofs_by_name['value']
+_PAYLOAD_PROPERTYVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_PROPERTYVALUE.fields_by_name['double_value'])
+_PAYLOAD_PROPERTYVALUE.fields_by_name['double_value'].containing_oneof = _PAYLOAD_PROPERTYVALUE.oneofs_by_name['value']
+_PAYLOAD_PROPERTYVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_PROPERTYVALUE.fields_by_name['boolean_value'])
+_PAYLOAD_PROPERTYVALUE.fields_by_name['boolean_value'].containing_oneof = _PAYLOAD_PROPERTYVALUE.oneofs_by_name['value']
+_PAYLOAD_PROPERTYVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_PROPERTYVALUE.fields_by_name['string_value'])
+_PAYLOAD_PROPERTYVALUE.fields_by_name['string_value'].containing_oneof = _PAYLOAD_PROPERTYVALUE.oneofs_by_name['value']
+_PAYLOAD_PROPERTYVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_PROPERTYVALUE.fields_by_name['propertyset_value'])
+_PAYLOAD_PROPERTYVALUE.fields_by_name['propertyset_value'].containing_oneof = _PAYLOAD_PROPERTYVALUE.oneofs_by_name['value']
+_PAYLOAD_PROPERTYVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_PROPERTYVALUE.fields_by_name['propertysets_value'])
+_PAYLOAD_PROPERTYVALUE.fields_by_name['propertysets_value'].containing_oneof = _PAYLOAD_PROPERTYVALUE.oneofs_by_name['value']
+_PAYLOAD_PROPERTYVALUE.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_PROPERTYVALUE.fields_by_name['extension_value'])
+_PAYLOAD_PROPERTYVALUE.fields_by_name['extension_value'].containing_oneof = _PAYLOAD_PROPERTYVALUE.oneofs_by_name['value']
+_PAYLOAD_PROPERTYSET.fields_by_name['values'].message_type = _PAYLOAD_PROPERTYVALUE
+_PAYLOAD_PROPERTYSET.containing_type = _PAYLOAD
+_PAYLOAD_PROPERTYSETLIST.fields_by_name['propertyset'].message_type = _PAYLOAD_PROPERTYSET
+_PAYLOAD_PROPERTYSETLIST.containing_type = _PAYLOAD
+_PAYLOAD_METADATA.containing_type = _PAYLOAD
+_PAYLOAD_METRIC_METRICVALUEEXTENSION.containing_type = _PAYLOAD_METRIC
+_PAYLOAD_METRIC.fields_by_name['metadata'].message_type = _PAYLOAD_METADATA
+_PAYLOAD_METRIC.fields_by_name['properties'].message_type = _PAYLOAD_PROPERTYSET
+_PAYLOAD_METRIC.fields_by_name['dataset_value'].message_type = _PAYLOAD_DATASET
+_PAYLOAD_METRIC.fields_by_name['template_value'].message_type = _PAYLOAD_TEMPLATE
+_PAYLOAD_METRIC.fields_by_name['extension_value'].message_type = _PAYLOAD_METRIC_METRICVALUEEXTENSION
+_PAYLOAD_METRIC.containing_type = _PAYLOAD
+_PAYLOAD_METRIC.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_METRIC.fields_by_name['int_value'])
+_PAYLOAD_METRIC.fields_by_name['int_value'].containing_oneof = _PAYLOAD_METRIC.oneofs_by_name['value']
+_PAYLOAD_METRIC.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_METRIC.fields_by_name['long_value'])
+_PAYLOAD_METRIC.fields_by_name['long_value'].containing_oneof = _PAYLOAD_METRIC.oneofs_by_name['value']
+_PAYLOAD_METRIC.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_METRIC.fields_by_name['float_value'])
+_PAYLOAD_METRIC.fields_by_name['float_value'].containing_oneof = _PAYLOAD_METRIC.oneofs_by_name['value']
+_PAYLOAD_METRIC.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_METRIC.fields_by_name['double_value'])
+_PAYLOAD_METRIC.fields_by_name['double_value'].containing_oneof = _PAYLOAD_METRIC.oneofs_by_name['value']
+_PAYLOAD_METRIC.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_METRIC.fields_by_name['boolean_value'])
+_PAYLOAD_METRIC.fields_by_name['boolean_value'].containing_oneof = _PAYLOAD_METRIC.oneofs_by_name['value']
+_PAYLOAD_METRIC.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_METRIC.fields_by_name['string_value'])
+_PAYLOAD_METRIC.fields_by_name['string_value'].containing_oneof = _PAYLOAD_METRIC.oneofs_by_name['value']
+_PAYLOAD_METRIC.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_METRIC.fields_by_name['bytes_value'])
+_PAYLOAD_METRIC.fields_by_name['bytes_value'].containing_oneof = _PAYLOAD_METRIC.oneofs_by_name['value']
+_PAYLOAD_METRIC.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_METRIC.fields_by_name['dataset_value'])
+_PAYLOAD_METRIC.fields_by_name['dataset_value'].containing_oneof = _PAYLOAD_METRIC.oneofs_by_name['value']
+_PAYLOAD_METRIC.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_METRIC.fields_by_name['template_value'])
+_PAYLOAD_METRIC.fields_by_name['template_value'].containing_oneof = _PAYLOAD_METRIC.oneofs_by_name['value']
+_PAYLOAD_METRIC.oneofs_by_name['value'].fields.append(
+  _PAYLOAD_METRIC.fields_by_name['extension_value'])
+_PAYLOAD_METRIC.fields_by_name['extension_value'].containing_oneof = _PAYLOAD_METRIC.oneofs_by_name['value']
+_PAYLOAD.fields_by_name['metrics'].message_type = _PAYLOAD_METRIC
 DESCRIPTOR.message_types_by_name['Payload'] = _PAYLOAD
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-Metric = _reflection.GeneratedProtocolMessageType('Metric', (_message.Message,), dict(
-  DESCRIPTOR = _METRIC,
-  __module__ = 'sparkplug_b_pb2'
-  # @@protoc_insertion_point(class_scope:sparkplug.Metric)
-  ))
-_sym_db.RegisterMessage(Metric)
-
 Payload = _reflection.GeneratedProtocolMessageType('Payload', (_message.Message,), dict(
+
+  Template = _reflection.GeneratedProtocolMessageType('Template', (_message.Message,), dict(
+
+    Parameter = _reflection.GeneratedProtocolMessageType('Parameter', (_message.Message,), dict(
+
+      ParameterValueExtension = _reflection.GeneratedProtocolMessageType('ParameterValueExtension', (_message.Message,), dict(
+        DESCRIPTOR = _PAYLOAD_TEMPLATE_PARAMETER_PARAMETERVALUEEXTENSION,
+        __module__ = 'sparkplug_b_pb2'
+        # @@protoc_insertion_point(class_scope:sparkplug.Payload.Template.Parameter.ParameterValueExtension)
+        ))
+      ,
+      DESCRIPTOR = _PAYLOAD_TEMPLATE_PARAMETER,
+      __module__ = 'sparkplug_b_pb2'
+      # @@protoc_insertion_point(class_scope:sparkplug.Payload.Template.Parameter)
+      ))
+    ,
+    DESCRIPTOR = _PAYLOAD_TEMPLATE,
+    __module__ = 'sparkplug_b_pb2'
+    # @@protoc_insertion_point(class_scope:sparkplug.Payload.Template)
+    ))
+  ,
+
+  DataSet = _reflection.GeneratedProtocolMessageType('DataSet', (_message.Message,), dict(
+
+    DataSetValue = _reflection.GeneratedProtocolMessageType('DataSetValue', (_message.Message,), dict(
+
+      DataSetValueExtension = _reflection.GeneratedProtocolMessageType('DataSetValueExtension', (_message.Message,), dict(
+        DESCRIPTOR = _PAYLOAD_DATASET_DATASETVALUE_DATASETVALUEEXTENSION,
+        __module__ = 'sparkplug_b_pb2'
+        # @@protoc_insertion_point(class_scope:sparkplug.Payload.DataSet.DataSetValue.DataSetValueExtension)
+        ))
+      ,
+      DESCRIPTOR = _PAYLOAD_DATASET_DATASETVALUE,
+      __module__ = 'sparkplug_b_pb2'
+      # @@protoc_insertion_point(class_scope:sparkplug.Payload.DataSet.DataSetValue)
+      ))
+    ,
+
+    Row = _reflection.GeneratedProtocolMessageType('Row', (_message.Message,), dict(
+      DESCRIPTOR = _PAYLOAD_DATASET_ROW,
+      __module__ = 'sparkplug_b_pb2'
+      # @@protoc_insertion_point(class_scope:sparkplug.Payload.DataSet.Row)
+      ))
+    ,
+    DESCRIPTOR = _PAYLOAD_DATASET,
+    __module__ = 'sparkplug_b_pb2'
+    # @@protoc_insertion_point(class_scope:sparkplug.Payload.DataSet)
+    ))
+  ,
+
+  PropertyValue = _reflection.GeneratedProtocolMessageType('PropertyValue', (_message.Message,), dict(
+
+    PropertyValueExtension = _reflection.GeneratedProtocolMessageType('PropertyValueExtension', (_message.Message,), dict(
+      DESCRIPTOR = _PAYLOAD_PROPERTYVALUE_PROPERTYVALUEEXTENSION,
+      __module__ = 'sparkplug_b_pb2'
+      # @@protoc_insertion_point(class_scope:sparkplug.Payload.PropertyValue.PropertyValueExtension)
+      ))
+    ,
+    DESCRIPTOR = _PAYLOAD_PROPERTYVALUE,
+    __module__ = 'sparkplug_b_pb2'
+    # @@protoc_insertion_point(class_scope:sparkplug.Payload.PropertyValue)
+    ))
+  ,
+
+  PropertySet = _reflection.GeneratedProtocolMessageType('PropertySet', (_message.Message,), dict(
+    DESCRIPTOR = _PAYLOAD_PROPERTYSET,
+    __module__ = 'sparkplug_b_pb2'
+    # @@protoc_insertion_point(class_scope:sparkplug.Payload.PropertySet)
+    ))
+  ,
+
+  PropertySetList = _reflection.GeneratedProtocolMessageType('PropertySetList', (_message.Message,), dict(
+    DESCRIPTOR = _PAYLOAD_PROPERTYSETLIST,
+    __module__ = 'sparkplug_b_pb2'
+    # @@protoc_insertion_point(class_scope:sparkplug.Payload.PropertySetList)
+    ))
+  ,
+
+  MetaData = _reflection.GeneratedProtocolMessageType('MetaData', (_message.Message,), dict(
+    DESCRIPTOR = _PAYLOAD_METADATA,
+    __module__ = 'sparkplug_b_pb2'
+    # @@protoc_insertion_point(class_scope:sparkplug.Payload.MetaData)
+    ))
+  ,
+
+  Metric = _reflection.GeneratedProtocolMessageType('Metric', (_message.Message,), dict(
+
+    MetricValueExtension = _reflection.GeneratedProtocolMessageType('MetricValueExtension', (_message.Message,), dict(
+      DESCRIPTOR = _PAYLOAD_METRIC_METRICVALUEEXTENSION,
+      __module__ = 'sparkplug_b_pb2'
+      # @@protoc_insertion_point(class_scope:sparkplug.Payload.Metric.MetricValueExtension)
+      ))
+    ,
+    DESCRIPTOR = _PAYLOAD_METRIC,
+    __module__ = 'sparkplug_b_pb2'
+    # @@protoc_insertion_point(class_scope:sparkplug.Payload.Metric)
+    ))
+  ,
   DESCRIPTOR = _PAYLOAD,
   __module__ = 'sparkplug_b_pb2'
   # @@protoc_insertion_point(class_scope:sparkplug.Payload)
   ))
 _sym_db.RegisterMessage(Payload)
+_sym_db.RegisterMessage(Payload.Template)
+_sym_db.RegisterMessage(Payload.Template.Parameter)
+_sym_db.RegisterMessage(Payload.Template.Parameter.ParameterValueExtension)
+_sym_db.RegisterMessage(Payload.DataSet)
+_sym_db.RegisterMessage(Payload.DataSet.DataSetValue)
+_sym_db.RegisterMessage(Payload.DataSet.DataSetValue.DataSetValueExtension)
+_sym_db.RegisterMessage(Payload.DataSet.Row)
+_sym_db.RegisterMessage(Payload.PropertyValue)
+_sym_db.RegisterMessage(Payload.PropertyValue.PropertyValueExtension)
+_sym_db.RegisterMessage(Payload.PropertySet)
+_sym_db.RegisterMessage(Payload.PropertySetList)
+_sym_db.RegisterMessage(Payload.MetaData)
+_sym_db.RegisterMessage(Payload.Metric)
+_sym_db.RegisterMessage(Payload.Metric.MetricValueExtension)
 
 
 # @@protoc_insertion_point(module_scope)

@@ -23,7 +23,7 @@ Install `paho-mqtt` pip package.
 
 .. code-block:: console
 
-    python3 -m pip install -r requirements-mqtt_sparkplug.txt
+    python3 -m pip install -r python/requirements-mqtt_sparkplug.txt
 
 
 Run publisher script
@@ -31,6 +31,7 @@ Run publisher script
 
 .. code-block:: console
 
+    $ cd tests
     $ python3 -m mqtt-pub
 
     Publishing metric: Temperature Sensor, Type: float, Value: 30.175339239401513, Timestamp: 1729752898

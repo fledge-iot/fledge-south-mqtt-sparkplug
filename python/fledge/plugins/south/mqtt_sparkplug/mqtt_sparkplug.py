@@ -245,9 +245,9 @@ class MqttSubscriberClient(object):
 
             for metric in sparkplug_payload.metrics:
                 value = "Unknown"
-                if metric.HasField("bool_value"):
+                if metric.HasField("boolean_value"):
                     """ bool value cast to int as internal. See FOGL-8067 """
-                    value = metric.bool_value
+                    value = metric.boolean_value
                 elif metric.HasField("float_value"):
                     value = metric.float_value
                 elif metric.HasField("int_value"):
