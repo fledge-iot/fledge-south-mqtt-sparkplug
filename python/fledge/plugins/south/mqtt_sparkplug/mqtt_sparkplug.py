@@ -135,6 +135,9 @@ _DEFAULT_CONFIG = {
 c_callback = None
 c_ingest_ref = None
 loop = None
+namespace = "spBv1.0"
+specification = "{}/{{group_id}}/{{message_type}}/{{edge_node_id}}/{{device_id}}".format(namespace)
+placeholder_keys = ['group_id', 'message_type', 'edge_node_id', 'device_id']
 
 
 def plugin_info():
@@ -252,7 +255,7 @@ class MqttSubscriberClient(object):
     """ mqtt subscriber """
 
     __slots__ = ['mqtt_client', 'broker_host', 'broker_port', 'username', 'password', 'topic',
-                 'asset_name', 'loop']
+                 'asset_name', 'asset_naming', 'topic_fragments', 'loop']
 
     def __init__(self, config):
         self.mqtt_client = mqtt.Client()
@@ -260,8 +263,10 @@ class MqttSubscriberClient(object):
         self.broker_port = int(config['port']['value'])
         self.username = config['user']['value']
         self.password = config['password']['value']
-        self.topic = config['topic']['value']
         self.asset_name = config['assetName']['value']
+        self.asset_naming = config['assetNaming']['value']
+        self.topic = config['topic']['value']
+        self.topic_fragments = config['topicFragments']['value']
 
     def on_connect(self, client, userdata, flags, rc):
         """ The callback for when the client receives a CONNACK response from the server """
@@ -305,10 +310,11 @@ class MqttSubscriberClient(object):
                     continue
 
                 self.save(metric, value)
+        except ValueError as err:
+            _LOGGER.error(err)
         except Exception as ex:
-            msg = (
-                "Message payload must comply with spBv1.0 standards. Please ensure that the format and structure of the "
-                "payload adhere to the specified requirements.")
+            msg = ("Message payload must comply with spBv1.0 standards. Please ensure that the format and structure "
+                   "of the payload adhere to the specified requirements.")
             _LOGGER.error(ex, msg)
 
     def on_subscribe(self, client, userdata, mid, granted_qos):
@@ -326,7 +332,8 @@ class MqttSubscriberClient(object):
         self.mqtt_client.on_message = self.on_message
         self.mqtt_client.on_disconnect = self.on_disconnect
         self.mqtt_client.connect(self.broker_host, self.broker_port)
-        _LOGGER.info("Attempting to connect to MQTT broker at {}:{}...".format(self.broker_host, self.broker_port))
+        _LOGGER.info("Attempting to connect to MQTT broker at {}:{}...".format(self.broker_host,
+                                                                               self.broker_port))
 
         self.mqtt_client.loop_start()
 
@@ -335,10 +342,92 @@ class MqttSubscriberClient(object):
         self.mqtt_client.loop_stop()
 
     def save(self, metric, value):
+        if self.asset_naming == 'Topic Fragments':
+            asset = self.validate_and_extract_topic_fragment()
+        elif self.asset_naming == 'Topic':
+            asset = self.topic
+        else:
+            asset = self.asset_name
         data = {
-            'asset': self.asset_name,
+            'asset': asset,
             'timestamp': datetime.fromtimestamp(metric.timestamp, tz=timezone.utc
                                                 ).strftime('%Y-%m-%d %H:%M:%S.%s'),
             'readings': {metric.name: value}
         }
         async_ingest.ingest_callback(c_callback, c_ingest_ref, data)
+
+    def validate_and_extract_topic_fragment(self):
+        # Split the specification and fragment into parts
+        spec_parts = specification.split('/')
+        fragment_parts = self.topic_fragments.split('/')
+
+        # Check if fragment contains valid placeholders
+        valid_placeholders = set(placeholder_keys)
+        fragment_placeholders = []
+
+        # Check for multiple occurrences of namespace in the fragment
+        if fragment_parts.count(namespace) > 1:
+            raise ValueError("Invalid fragment: '{}' appears more than once.".format(namespace))
+
+        # Validate placeholders and collect them
+        for part in fragment_parts:
+            if part.startswith("{") and part.endswith("}"):
+                # Extract the placeholder key by removing curly braces
+                key = part[1:-1]
+                fragment_placeholders.append(key)
+                # Check if it's a valid placeholder
+                if key not in valid_placeholders:
+                    raise ValueError("Invalid placeholder '{}' found in the topic fragment.".format(key))
+            elif part != namespace:  # Ensure no extraneous parts except namespace or valid placeholders
+                raise ValueError("Invalid part '{}' found in the topic fragment.".format(part))
+
+        # Check for duplicate placeholders in the fragment
+        duplicate_placeholders = [key for key in fragment_placeholders if fragment_placeholders.count(key) > 1]
+        if duplicate_placeholders:
+            raise ValueError("Invalid fragment: Duplicate placeholder(s) found: {}.".format(', '.join(
+                set(duplicate_placeholders))))
+
+        # Validate the order of placeholders
+        placeholder_order = {key: spec_parts.index('{{{}}}'.format(key)) for key in placeholder_keys}
+
+        # Check if placeholders are in the correct order
+        last_index = -1
+        for placeholder in fragment_placeholders:
+            if placeholder not in placeholder_order:
+                raise ValueError("Unknown placeholder '{}' in the fragment.".format(placeholder))
+            current_index = placeholder_order[placeholder]
+            if current_index < last_index:
+                raise ValueError("Invalid order: '{}' must appear after its previous placeholders.".format(placeholder))
+            last_index = current_index
+
+        # Ensure version prefix namespace appears before any placeholders
+        if namespace in fragment_parts:
+            if fragment_parts[0] != namespace:
+                raise ValueError("'{}' must appear before any placeholders.".format(namespace))
+        else:
+            # If no version prefix is provided, ensure the fragment still follows the placeholder order
+            if len(fragment_parts) == 0 or fragment_parts[0] in placeholder_keys:
+                raise ValueError("The fragment must start with '{}' if no placeholders are given.".format(namespace))
+
+        # Extract the values from the topic based on placeholders
+        topic_parts = self.topic.split('/')
+        placeholder_values = {}
+
+        for i, part in enumerate(spec_parts):
+            if part.startswith("{") and part.endswith("}"):  # It's a placeholder
+                key = part[1:-1]  # Remove the curly braces to get the key
+                placeholder_values[key] = topic_parts[i]  # Map the key to the corresponding topic part
+
+        # Replace the placeholders in the fragment with values from the topic
+        result_parts = []
+        for part in fragment_parts:
+            if part.startswith("{") and part.endswith("}"):  # If it's a placeholder
+                key = part[1:-1]  # Get the placeholder key
+                result_parts.append(placeholder_values.get(key))  # Get the corresponding value
+            else:
+                result_parts.append(part)  # If it's not a placeholder, just add the part as is
+
+        # Join the result parts to form the final output
+        result = '/'.join(result_parts)
+        return result
+
