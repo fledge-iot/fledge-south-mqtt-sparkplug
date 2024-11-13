@@ -43,49 +43,93 @@ _DEFAULT_CONFIG = {
         'default': 'mqtt_sparkplug',
         'readonly': 'true'
     },
-    'assetName': {
-        'description': 'Name of Asset',
+    'user': {
+        'description': 'Username for MQTT Server',
         'type': 'string',
-        'default': 'mqtt',
+        'default': '',
         'order': '1',
-        'displayName': 'Asset Name',
-        'mandatory': 'true'
+        'displayName': 'Username',
+        'group': 'Authentication'
+    },
+    'password': {
+        'description': 'Password for MQTT Server',
+        'type': 'password',
+        'default': '',
+        'order': '2',
+        'displayName': 'Password',
+        'group': 'Authentication'
     },
     'url': {
         'description': 'Hostname for MQTT Server',
         'type': 'string',
-        'default': 'chariot.groov.com',
-        'order': '2',
-        'displayName': 'MQTT Host'
+        'default': 'localhost',
+        'order': '1',
+        'displayName': 'MQTT Host',
+        'mandatory': 'true',
+        'group': 'Connection'
     },
     'port': {
         'description': 'Port for MQTT Server',
         'type': 'string',
         'default': '1883',
-        'order': '3',
-        'displayName': 'MQTT Port'
+        'order': '2',
+        'displayName': 'MQTT Port',
+        'mandatory': 'true',
+        'group': 'Connection'
     },
-    'user': {
-        'description': 'Username for MQTT Server',
+    'assetNaming': {
+        'description': 'Asset naming',
+        'type': 'enumeration',
+        'options': ['Asset Name', 'Topic Fragments', 'Topic'],
+        'default': 'Asset Name',
+        'order': '1',
+        'displayName': 'Asset Naming',
+        'group': 'Readings Structure'
+    },
+    'assetName': {
+        'description': 'Asset Name',
         'type': 'string',
-        'default': 'opto',
-        'order': '4',
-        'displayName': 'Username'
+        'default': '',
+        'order': '2',
+        'displayName': 'Asset Name',
+        'group': 'Readings Structure',
+        'validity': 'assetNaming == "Asset Name"'
     },
-    'password': {
-        'description': 'Password for MQTT Server',
-        'type': 'password',
-        'default': 'opto22',
+    'topicFragments': {
+        'description': 'Values will be used from the subscribed topic',
+        'type': 'string',
+        'default': 'spBv1.0/{group_id}/{message_type}/{edge_node_id}/{device_id}',
+        'order': '3',
+        'displayName': 'Topic Fragments',
+        'group': 'Readings Structure',
+        'validity': 'assetNaming == "Topic Fragments"'
+    },
+    'datapoints': {
+        'description': 'To construct reading datapoints from the received data attributes on topic',
+        'type': 'enumeration',
+        'options': ['Per metric', 'Per device'],
+        'default': 'Per metric',
+        'order': '4',
+        'displayName': 'Datapoints',
+        'group': 'Readings Structure'
+    },
+    'attachTopicDatapoint': {
+        'description': 'Attach Topic as a Datapoint in Reading',
+        'type': 'boolean',
+        'default': 'false',
         'order': '5',
-        'displayName': 'Password'
+        'displayName': 'Attach Topic as a Datapoint',
+        'group': 'Readings Structure'
     },
     'topic': {
         'description': 'Name of Topic',
         'type': 'string',
-        'default': 'spBv1.0/Opto22/DDATA/groovEPIC_workshop/Strategy',
-        'order': '6',
-        'displayName': 'Topic'
-    },
+        'default': 'spBv1.0/group_id/message_type/edge_node_id/device_id',
+        'order': '1',
+        'displayName': 'Topic',
+        'mandatory': 'true',
+        'group': 'Topic'
+    }
 }
 
 c_callback = None
