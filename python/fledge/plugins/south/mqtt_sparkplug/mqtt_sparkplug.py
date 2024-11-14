@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 import async_ingest
 import paho.mqtt.client as mqtt
 from fledge.common import logger
-
+from fledge.plugins.common import utils
 try:
     from fledge.plugins.south.mqtt_sparkplug.sparkplug_b import sparkplug_b_pb2
 except:
@@ -255,7 +255,7 @@ class MqttSubscriberClient(object):
     """ mqtt subscriber """
 
     __slots__ = ['mqtt_client', 'broker_host', 'broker_port', 'username', 'password', 'topic',
-                 'asset_name', 'asset_naming', 'topic_fragments', 'attach_topic_datapoint', 'loop']
+                 'asset_name', 'asset_naming', 'topic_fragments', 'attach_topic_datapoint', 'datapoints', 'loop']
 
     def __init__(self, config):
         self.mqtt_client = mqtt.Client()
@@ -268,6 +268,7 @@ class MqttSubscriberClient(object):
         self.topic = config['topic']['value']
         self.topic_fragments = config['topicFragments']['value']
         self.attach_topic_datapoint = config['attachTopicDatapoint']['value']
+        self.datapoints = config['datapoints']['value']
 
     def on_connect(self, client, userdata, flags, rc):
         """ The callback for when the client receives a CONNACK response from the server """
@@ -293,6 +294,7 @@ class MqttSubscriberClient(object):
             sparkplug_payload = sparkplug_b_pb2.Payload()
             sparkplug_payload.ParseFromString(msg.payload)
 
+            device_readings = {}
             for metric in sparkplug_payload.metrics:
                 value = "Unknown"
                 if metric.HasField("boolean_value"):
@@ -309,8 +311,13 @@ class MqttSubscriberClient(object):
                     _LOGGER.warning("Ignoring metric '{}' due to unknown type. "
                                     "Only supported types are: float, integer, string, bool.".format(metric.name))
                     continue
-
-                self.save(metric, value)
+                if self.datapoints == "Per metric":
+                    self.save({metric.name: value}, datetime.fromtimestamp(
+                        metric.timestamp, tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S.%s'))
+                else:
+                    device_readings.update({metric.name: value})
+            if self.datapoints == 'Per device':
+                self.save(device_readings, utils.local_timestamp())
         except ValueError as err:
             _LOGGER.error(err)
         except Exception as ex:
@@ -342,20 +349,18 @@ class MqttSubscriberClient(object):
         self.mqtt_client.disconnect()
         self.mqtt_client.loop_stop()
 
-    def save(self, metric, value):
+    def save(self, readings, ts):
         if self.asset_naming == 'Topic Fragments':
             asset = self.validate_and_extract_topic_fragment()
         elif self.asset_naming == 'Topic':
             asset = self.topic
         else:
             asset = self.asset_name
-        readings = {metric.name: value}
         if self.attach_topic_datapoint == "true":
             readings.update({"SparkPlugB:Topic": self.topic})
         data = {
             'asset': asset,
-            'timestamp': datetime.fromtimestamp(metric.timestamp, tz=timezone.utc
-                                                ).strftime('%Y-%m-%d %H:%M:%S.%s'),
+            'timestamp': ts,
             'readings': readings
         }
         async_ingest.ingest_callback(c_callback, c_ingest_ref, data)
