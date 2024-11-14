@@ -255,7 +255,7 @@ class MqttSubscriberClient(object):
     """ mqtt subscriber """
 
     __slots__ = ['mqtt_client', 'broker_host', 'broker_port', 'username', 'password', 'topic',
-                 'asset_name', 'asset_naming', 'topic_fragments', 'loop']
+                 'asset_name', 'asset_naming', 'topic_fragments', 'attach_topic_datapoint', 'loop']
 
     def __init__(self, config):
         self.mqtt_client = mqtt.Client()
@@ -267,6 +267,7 @@ class MqttSubscriberClient(object):
         self.asset_naming = config['assetNaming']['value']
         self.topic = config['topic']['value']
         self.topic_fragments = config['topicFragments']['value']
+        self.attach_topic_datapoint = config['attachTopicDatapoint']['value']
 
     def on_connect(self, client, userdata, flags, rc):
         """ The callback for when the client receives a CONNACK response from the server """
@@ -348,11 +349,14 @@ class MqttSubscriberClient(object):
             asset = self.topic
         else:
             asset = self.asset_name
+        readings = {metric.name: value}
+        if self.attach_topic_datapoint == "true":
+            readings.update({"SparkPlugB:Topic": self.topic})
         data = {
             'asset': asset,
             'timestamp': datetime.fromtimestamp(metric.timestamp, tz=timezone.utc
                                                 ).strftime('%Y-%m-%d %H:%M:%S.%s'),
-            'readings': {metric.name: value}
+            'readings': readings
         }
         async_ingest.ingest_callback(c_callback, c_ingest_ref, data)
 
