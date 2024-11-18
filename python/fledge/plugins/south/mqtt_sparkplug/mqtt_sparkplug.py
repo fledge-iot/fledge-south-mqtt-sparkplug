@@ -47,7 +47,7 @@ _DEFAULT_CONFIG = {
         'description': 'Username for MQTT Server',
         'type': 'string',
         'default': '',
-        'order': '1',
+        'order': '4',
         'displayName': 'Username',
         'group': 'Authentication'
     },
@@ -55,7 +55,7 @@ _DEFAULT_CONFIG = {
         'description': 'Password for MQTT Server',
         'type': 'password',
         'default': '',
-        'order': '2',
+        'order': '5',
         'displayName': 'Password',
         'group': 'Authentication'
     },
@@ -82,7 +82,7 @@ _DEFAULT_CONFIG = {
         'type': 'enumeration',
         'options': ['Asset Name', 'Topic Fragments', 'Topic'],
         'default': 'Asset Name',
-        'order': '1',
+        'order': '6',
         'displayName': 'Asset Naming',
         'group': 'Readings Structure'
     },
@@ -90,7 +90,7 @@ _DEFAULT_CONFIG = {
         'description': 'Asset Name',
         'type': 'string',
         'default': '',
-        'order': '2',
+        'order': '7',
         'displayName': 'Asset Name',
         'group': 'Readings Structure',
         'validity': 'assetNaming == "Asset Name"'
@@ -99,7 +99,7 @@ _DEFAULT_CONFIG = {
         'description': 'Values will be used from the subscribed topic',
         'type': 'string',
         'default': 'spBv1.0/{group_id}/{message_type}/{edge_node_id}/{device_id}',
-        'order': '3',
+        'order': '8',
         'displayName': 'Topic Fragments',
         'group': 'Readings Structure',
         'validity': 'assetNaming == "Topic Fragments"'
@@ -109,7 +109,7 @@ _DEFAULT_CONFIG = {
         'type': 'enumeration',
         'options': ['Per metric', 'Per device'],
         'default': 'Per metric',
-        'order': '4',
+        'order': '9',
         'displayName': 'Datapoints',
         'group': 'Readings Structure'
     },
@@ -117,15 +117,15 @@ _DEFAULT_CONFIG = {
         'description': 'Attach Topic as a Datapoint in Reading',
         'type': 'boolean',
         'default': 'false',
-        'order': '5',
+        'order': '10',
         'displayName': 'Attach Topic as a Datapoint',
         'group': 'Readings Structure'
     },
     'topic': {
-        'description': 'Name of Topic',
+        'description': 'Topic to subscribe',
         'type': 'string',
         'default': 'spBv1.0/group_id/message_type/edge_node_id/device_id',
-        'order': '1',
+        'order': '3',
         'displayName': 'Topic',
         'mandatory': 'true',
         'group': 'Topic'

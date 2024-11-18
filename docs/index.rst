@@ -2,9 +2,9 @@
 .. |sparkplug_1| image:: images/sparkplug_1.jpg
 .. |sparkplug_2| image:: images/sparkplug_2.jpg
 .. |sparkplug_3| image:: images/sparkplug_3.jpg
-.. |sparkplug_3.1| image:: images/sparkplug_3.1.jpg
-.. |sparkplug_3.2| image:: images/sparkplug_3.2.jpg
 .. |sparkplug_4| image:: images/sparkplug_4.jpg
+.. |sparkplug_4.1| image:: images/sparkplug_4.1.jpg
+.. |sparkplug_4.2| image:: images/sparkplug_4.2.jpg
 
 MQTT Sparkplug B
 ================
@@ -23,75 +23,69 @@ To create a south service with the MQTT Sparkplug B plugin
 
 - Name your service and click *Next*
 
+=============
+Configuration
+=============
+
 The configuration parameters that can be set on this page are divided into a set of tabs;
 
-  - Authentication
   - Connection
-  - Readings Structure
   - Topic
+  - Authentication
+  - Readings Structure
 
-Authentication Configuration
-----------------------------
-The Authentication configuration tab is shown below:
+    The Connection configuration tab is shown below:
 
-+---------------+
-| |sparkplug_1| |
-+---------------+
+    +---------------+
+    | |sparkplug_1| |
+    +---------------+
 
-- **Username**: The user name to be used when authenticating with the MQTT subsystem.
-- **Password**: The password to be used when authenticating with the MQTT subsystem.
+    - **MQTT Host**: The MQTT host to connect to, this is the host that is running the MQTT broker.
+    - **MQTT Port**: The MQTT port, this is the port the MQTT broker uses for unencrypted traffic, usually 1883 unless modified.
 
-Connection Configuration
-------------------------
-The Connection configuration tab is shown below:
+    The Topic configuration tab is shown below:
 
-+---------------+
-| |sparkplug_2| |
-+---------------+
+        +---------------+
+        | |sparkplug_2| |
+        +---------------+
 
-- **MQTT Host**: The MQTT host to connect to, this is the host that is running the MQTT broker.
-- **MQTT Port**: The MQTT port, this is the port the MQTT broker uses for unencrypted traffic, usually 1883 unless modified.
+        - **Topic**: The MQTT topic to which the plugin will subscribe.
 
+    The Authentication configuration tab is shown below:
 
-Readings Structure Configuration
---------------------------------
-The Readings Structure configuration tab is shown below:
+    +---------------+
+    | |sparkplug_3| |
+    +---------------+
 
-+---------------+
-| |sparkplug_3| |
-+---------------+
+    - **Username**: The user name to be used when authenticating with the MQTT subsystem.
+    - **Password**: The password to be used when authenticating with the MQTT subsystem.
 
-- **Asset Naming**: Asset naming which will be used to decide as follows:
-
-    +-----------------+
-    | |sparkplug_3.1| |
-    +-----------------+
-
-    - *Asset Name*: Fixed asset name.
-    - *Topic Fragments*: Asset name as per topic fragments. Use Placeholders from {group_id}/{message_type}/{edge_node_id}/{device_id} and order matters. For example: {group_id}/{edge_node_id}, {group_id}/{device_id}, {edge_node_id}/{device_id}, {group_id}/{edge_node_id}/{device_id} etc.
-    - *Topic*: Asset name will be same as subscribed topic.
-
-- **Datapoints**: To construct readings datapoints from the received data attributes on topic
-
-    +-----------------+
-    | |sparkplug_3.2| |
-    +-----------------+
-
-    - *Per metric*: A single metric per asset.
-    - *Per Device*: It allows all the metrics for a single device, as device by the topic structure to be created.
-
-- **Attach Topic as a Datapoint**: Attach Topic as a Datapoint in Reading. By default it's value unchecked.
-
-
-Topic Configuration
--------------------
-The Topic configuration tab is shown below:
+    The Readings Structure configuration tab is shown below:
 
     +---------------+
     | |sparkplug_4| |
     +---------------+
 
-    - **Topic**: The MQTT topic to which the plugin will subscribe.
+    - **Asset Naming**: Asset naming for reading objects. The available options are as follows:
+
+        +-----------------+
+        | |sparkplug_4.1| |
+        +-----------------+
+
+        - *Asset Name*: Fixed asset name.
+        - *Topic Fragments*: The asset name will be constructed based on the subscribed MQTT topic. The placeholder components within the Sparkplug B topic will be replaced with corresponding values from the subscribed topic. For example, {message_type} will be replaced with the appropriate value, such as DBIRTH, DDATA, DDEATH, etc., as defined for the topic.
+        - *Topic*: Asset name will be same as subscribed topic.
+
+    - **Datapoints**: To construct readings datapoints from the received data attributes on topic
+
+        +-----------------+
+        | |sparkplug_4.2| |
+        +-----------------+
+
+        - *Per metric*: Each metric will be stored as an individual reading.
+        - *Per Device*: All the metrics in the payload will be stored as a single reading, where each metric will be datapoint as reading attribute.
+
+    - **Attach Topic as a Datapoint**: It allows attaching the subscribed topic as an additional datapoint within the reading object. This reading attribute serves as metadata associated with the reading.
 
 
 - Click *Next*
