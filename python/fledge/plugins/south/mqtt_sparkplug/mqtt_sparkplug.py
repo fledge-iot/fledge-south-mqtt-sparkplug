@@ -57,7 +57,8 @@ _DEFAULT_CONFIG = {
         'default': '',
         'order': '5',
         'displayName': 'Password',
-        'group': 'Authentication'
+        'group': 'Authentication',
+        'validity': 'user != ""'
     },
     'url': {
         'description': 'Hostname for MQTT Server',
@@ -100,6 +101,7 @@ _DEFAULT_CONFIG = {
         'type': 'string',
         'default': 'spBv1.0/{group_id}/{message_type}/{edge_node_id}/{device_id}',
         'order': '8',
+        'mandatory': 'true',
         'displayName': 'Topic Fragments',
         'group': 'Readings Structure',
         'validity': 'assetNaming == "Topic Fragments"'
@@ -135,7 +137,7 @@ _DEFAULT_CONFIG = {
 c_callback = None
 c_ingest_ref = None
 loop = None
-namespace = "spBv1.0"
+NAMESPACE = "spBv1.0"
 
 
 def plugin_info():
@@ -264,7 +266,7 @@ class MqttSubscriberClient(object):
         self.asset_name = config['assetName']['value']
         self.asset_naming = config['assetNaming']['value']
         self.topic = config['topic']['value']
-        self.topic_fragments = config['topicFragments']['value']
+        self.topic_fragments = config['topicFragments']['value'].lower()
         self.attach_topic_datapoint = config['attachTopicDatapoint']['value']
         self.datapoints = config['datapoints']['value']
 
@@ -316,11 +318,14 @@ class MqttSubscriberClient(object):
                     device_readings.update({metric.name: value})
             if self.datapoints == 'Per device':
                 self.save(device_readings, utils.local_timestamp())
+        except KeyError as err:
+            _LOGGER.error(err, "Check the topic fragments, and ensure that placeholders are replaced with values "
+                               "such as group_id, message_type, edge_node_id, or device_id.")
         except ValueError as err:
             _LOGGER.error(err)
         except Exception as ex:
             msg = ("Message payload must comply with {} standards. Please ensure that the format and structure "
-                   "of the payload adhere to the specified requirements.".format(namespace))
+                   "of the payload adhere to the specified requirements.".format(NAMESPACE))
             _LOGGER.error(ex, msg)
 
     def on_subscribe(self, client, userdata, mid, granted_qos):
@@ -364,15 +369,21 @@ class MqttSubscriberClient(object):
         async_ingest.ingest_callback(c_callback, c_ingest_ref, data)
 
     def validate_topic(self) -> bool:
+        # TODO: FOGL-9268 wildcard characters
+        # +: Matches a single level in the topic hierarchy.
+        # #: Matches all remaining levels in the topic hierarchy.
+        # FIXME: Once the issue in JIRA is resolved, validate the topic accordingly
+        return True
+
         # Split the topic by '/'
         components = self.topic.split('/')
 
-        # Rule 1: Must start with "spBv1.0"
-        if components[0] != namespace:
+        # Rule 1: Topic must have at-least 4 or maximum 5 components, device_id is Optional
+        if len(components) < 4 or len(components) > 5:
             return False
 
-        # Rule 2: Topic must have 3 or 4 components
-        if len(components) < 4 or len(components) > 5:
+        # Rule 2: Must start with "spBv1.0"
+        if components[0] != NAMESPACE:
             return False
 
         # Rule 3: No empty strings allowed in components
@@ -385,16 +396,11 @@ class MqttSubscriberClient(object):
         if components[2] not in valid_message_types:
             return False
 
-        # TODO: FOGL-9268 wildcard characters
-        # +: Matches a single level in the topic hierarchy.
-        # #: Matches all remaining levels in the topic hierarchy.
-        return True
-
     def construct_asset_naming_topic_fragments(self):
         components = self.topic.split('/')
         template = self.topic_fragments
         topic_items = {
-            "namespace": namespace,
+            "namespace": NAMESPACE,
             "group_id": components[1],
             "message_type": components[2],
             "edge_node_id": components[3],
@@ -406,3 +412,4 @@ class MqttSubscriberClient(object):
             template = template.replace("/{device_id}", "")
 
         return template.format(**topic_items)
+
