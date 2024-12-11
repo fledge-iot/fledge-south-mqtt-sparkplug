@@ -9,7 +9,7 @@ import asyncio
 import copy
 import logging
 from datetime import datetime, timezone
-
+import ctypes
 import async_ingest
 import paho.mqtt.client as mqtt
 from fledge.common import logger
@@ -297,13 +297,17 @@ class MqttSubscriberClient(object):
             device_readings = {}
             for metric in sparkplug_payload.metrics:
                 value = "Unknown"
+                data_type = metric.datatype
                 if metric.HasField("boolean_value"):
                     """ bool value cast to int as internal. See FOGL-8067 """
                     value = metric.boolean_value
                 elif metric.HasField("float_value"):
                     value = metric.float_value
                 elif metric.HasField("int_value"):
-                    value = metric.int_value
+                    if data_type < 5 :
+                        value = ctypes.c_int(metric.int_value).value
+                    else:
+                        value = metric.int_value
                 elif metric.HasField("string_value"):
                     value = metric.string_value
                 # TODO: FOGL- 9198 - Handle other data types
