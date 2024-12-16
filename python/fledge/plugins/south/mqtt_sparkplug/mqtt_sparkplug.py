@@ -303,7 +303,12 @@ class MqttSubscriberClient(object):
                 elif metric.HasField("float_value"):
                     value = metric.float_value
                 elif metric.HasField("int_value"):
-                    value = metric.int_value
+                    # TODO: FOGL-9320 For long and double values support
+                    # Ensure that the value fits within the range of int32
+                    if -2147483648 <= metric.int_value <= 2147483647:
+                        value = metric.int_value
+                    else:
+                        _LOGGER.warning(f"Ignoring metric '{metric.name}' due to value is out of range for int32.")
                 elif metric.HasField("string_value"):
                     value = metric.string_value
                 # TODO: FOGL- 9198 - Handle other data types
