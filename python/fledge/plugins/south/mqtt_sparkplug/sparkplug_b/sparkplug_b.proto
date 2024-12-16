@@ -153,7 +153,7 @@ message Payload {
     optional MetaData metadata = 8;  // Metadata for the payload
     optional PropertySet properties = 9;
     oneof value {
-      uint32 int_value = 10;
+      int32 int_value = 10;
       uint64 long_value = 11;
       float float_value = 12;
       double double_value = 13;
