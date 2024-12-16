@@ -28,6 +28,7 @@ DDATA_TOPIC = "spBv1.0/Opto22/DDATA/groovEPIC_workshop/Strategy"   # Send Period
 # Define your device ID
 device_id = "your_device_id"
 
+
 # Sparkplug payload example for DBIRTH
 def create_dbirth_payload():
     message = {
@@ -51,6 +52,7 @@ def create_dbirth_payload():
     binary_data = payload.SerializeToString()
     return binary_data
 
+
 # Create DDATA payload
 def create_ddata_payload():
     bool_values = [True, False]
@@ -58,13 +60,13 @@ def create_ddata_payload():
         "metrics": [
             {
                 "name": "Temperature Sensor",
-                "value": random.uniform(22.0, 32.0),  # Float
+                "value": random.uniform(-22.0, 32.0),  # Float
                 "timestamp": int(time.time()),
                 "type": "float"
             },
             {
                 "name": "Humidity Sensor",
-                "value": random.randint(45, 175),  # Integer
+                "value": random.randint(-45, 175),  # Integer
                 "timestamp": int(time.time()),
                 "type": "integer"
             },
@@ -85,7 +87,6 @@ def create_ddata_payload():
 
     # Create a Payload instance
     payload = sparkplug_b_pb2.Payload()
-
     # Populate the Payload with Metric instances
     for metric in message["metrics"]:
         m = payload.metrics.add()  # Add a new Metric to the Payload
@@ -96,7 +97,11 @@ def create_ddata_payload():
         if metric["type"] == "float":
             m.float_value = metric["value"]
         elif metric["type"] == "integer":
-            m.int_value = metric["value"]
+            # Ensure that the value fits within the range of int32
+            if -2147483648 <= metric["value"] <= 2147483647:
+                m.int_value = metric["value"]
+            else:
+                print(f"Ignoring metric '{m.name}' because the value is out of range for int32.")
         elif metric["type"] == "string":
             m.string_value = metric["value"]
         elif metric["type"] == "boolean":
@@ -106,9 +111,11 @@ def create_ddata_payload():
             continue
         print(
             f"Publishing metric: {m.name}, Type: {metric['type']}, Value: {metric['value']}, Timestamp: {m.timestamp}")
+
     # Now you can serialize the payload or use it as needed
     binary_data = payload.SerializeToString()
     return binary_data
+
 
 # Create DDEATH payload
 def create_ddeath_payload():
@@ -133,6 +140,7 @@ def create_ddeath_payload():
     binary_data = payload.SerializeToString()
     return binary_data
 
+
 # Callback for when the client connects
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
@@ -140,6 +148,7 @@ def on_connect(client, userdata, flags, rc):
     dbirth = create_dbirth_payload()
     client.publish(DBIRTH_TOPIC, dbirth)
     print("Published DBIRTH message")
+
 
 # Initialize MQTT Client
 mqtt_client = mqtt.Client()
