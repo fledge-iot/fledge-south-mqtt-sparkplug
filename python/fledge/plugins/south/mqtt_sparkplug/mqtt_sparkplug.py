@@ -297,7 +297,6 @@ class MqttSubscriberClient(object):
             device_readings = {}
             for metric in sparkplug_payload.metrics:
                 value = "Unknown"
-                data_type = metric.datatype
                 if metric.HasField("boolean_value"):
                     """ bool value cast to int as internal. See FOGL-8067 """
                     value = metric.boolean_value
@@ -305,13 +304,33 @@ class MqttSubscriberClient(object):
                     value = metric.float_value
                 elif metric.HasField("double_value"):
                     value = metric.double_value
+                # Handle signed and unsigned integer types
                 elif metric.HasField("int_value"):
-                    if data_type < 5 :
+                    # Set data_type to metric.datatype if it exists, otherwise default to 3 (Int32)
+                    data_type = metric.datatype if metric.HasField("datatype") else 3
+
+                    # If data_type is less than 4 (Int8, Int16, Int32), treat as signed integer
+                    # Convert the value using ctypes.c_int for proper signed handling
+                    if data_type < 4:  # Signed integers: Int8, Int16, Int32
                         value = ctypes.c_int(metric.int_value).value
                     else:
-                        value = metric.int_value
+                        # For other integer types (e.g., unsigned integers), use the raw int_value
+                        # This acts as a fallback for default unsigned values
+                        value = metric.int_value  
+
+                # Handle long integer types (64-bit integers)
                 elif metric.HasField("long_value"):
-                    value = metric.long_value
+                    # Set data_type to metric.datatype if it exists, otherwise default to 4 (Int64)
+                    data_type = metric.datatype if metric.HasField("datatype") else 4
+
+                    # If data_type is 4, treat as a signed 64-bit integer (Int64)
+                    # Convert the value using ctypes.c_long for proper signed handling
+                    if data_type == 4:  # Int64
+                        value = ctypes.c_long(metric.long_value).value
+                    else:
+                        # For other long types (e.g., unsigned long), use the raw long_value
+                        # This acts as a fallback for default unsigned values
+                        value = metric.long_value 
                 elif metric.HasField("string_value"):
                     value = metric.string_value
                 # TODO: FOGL-9302, FOGL-9198 - Handle other data types
