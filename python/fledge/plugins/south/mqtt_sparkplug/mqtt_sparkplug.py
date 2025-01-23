@@ -92,7 +92,6 @@ _DEFAULT_CONFIG = {
         'type': 'string',
         'default': 'mqtt',
         'order': '7',
-        'mandatory': 'true',
         'displayName': 'Asset Name',
         'group': 'Readings Structure',
         'validity': 'assetNaming == "Asset Name"'
@@ -385,8 +384,13 @@ class MqttSubscriberClient(object):
             asset = self.construct_asset_naming_topic_fragments()
         elif self.asset_naming == 'Topic':
             asset = self.topic
-        else:
-            asset = self.asset_name
+        elif self.asset_naming == 'Asset Name':
+            if len(self.asset_name.strip()) > 0:
+                asset = self.asset_name
+            else:
+                asset = self.topic
+                _LOGGER.warning("Asset Name cannot be blank or whitespace for Asset Naming. Asset Name is modified to {}".format(self.topic))
+
         if self.attach_topic_datapoint == "true":
             readings.update({"SparkPlugB:Topic": self.topic})
         data = {
