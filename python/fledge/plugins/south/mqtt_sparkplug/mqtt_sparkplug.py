@@ -92,6 +92,7 @@ _DEFAULT_CONFIG = {
         'type': 'string',
         'default': 'mqtt',
         'order': '7',
+        'mandatory': 'true',
         'displayName': 'Asset Name',
         'group': 'Readings Structure',
         'validity': 'assetNaming == "Asset Name"'
