@@ -263,7 +263,7 @@ class MqttSubscriberClient(object):
         self.broker_port = int(config['port']['value'])
         self.username = config['user']['value']
         self.password = config['password']['value']
-        self.asset_name = config['assetName']['value']
+        self.asset_name = config['assetName']['value'].strip()
         self.asset_naming = config['assetNaming']['value']
         self.topic = config['topic']['value']
         self.topic_fragments = config['topicFragments']['value'].lower()
@@ -385,11 +385,9 @@ class MqttSubscriberClient(object):
         elif self.asset_naming == 'Topic':
             asset = self.topic
         elif self.asset_naming == 'Asset Name':
-            if len(self.asset_name.strip()) > 0:
-                asset = self.asset_name
-            else:
-                asset = self.topic
-                _LOGGER.warning("Asset Name cannot be blank or whitespace for Asset Naming. Asset Name is modified to {}".format(self.topic))
+            asset = self.asset_name or self.topic
+            if not self.asset_name:
+                _LOGGER.warning("Asset Name cannot be empty or consist only of whitespace. It has been replaced with the '{}' topic from the incoming MQTT message.".format(self.topic))
 
         if self.attach_topic_datapoint == "true":
             readings.update({"SparkPlugB:Topic": self.topic})

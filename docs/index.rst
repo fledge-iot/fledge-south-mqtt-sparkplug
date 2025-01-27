@@ -72,7 +72,7 @@ The configuration parameters that can be set on this page are divided into a set
         | |sparkplug_4.1| |
         +-----------------+
 
-        - *Asset Name*: Fixed asset name. Asset name should not be blank or whitespace; will be replaced by subscribed topic if left blank.
+        - *Asset Name*: Fixed asset name. If the asset name is left empty or only contains whitespace then the topic of the incoming MQTT message will be used as the asset name.
         - *Topic Fragments*: The asset name will be constructed based on the subscribed MQTT topic. The placeholder components within the Sparkplug B topic will be replaced with corresponding values from the subscribed topic. For example, {message_type} will be replaced with the appropriate value, such as DBIRTH, DDATA, DDEATH, etc., as defined for the topic.
         - *Topic*: Asset name will be same as subscribed topic.
 
