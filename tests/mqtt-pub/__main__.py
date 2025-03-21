@@ -63,6 +63,12 @@ def create_ddata_payload():
                 "type": "float"
             },
             {
+                "name": "Double",
+                "value": random.uniform(-100.0, 100.0),  # Double
+                "timestamp": int(time.time()),
+                "type": "double"
+            },
+            {
                 "name": "Humidity Sensor",
                 "value": random.randint(45, 175),  # Integer
                 "timestamp": int(time.time()),
@@ -91,21 +97,31 @@ def create_ddata_payload():
         m = payload.metrics.add()  # Add a new Metric to the Payload
         m.name = metric["name"]
         m.timestamp = metric["timestamp"]
-
-        # Set the appropriate value based on type
-        if metric["type"] == "float":
-            m.float_value = metric["value"]
-        elif metric["type"] == "integer":
-            m.int_value = metric["value"]
-        elif metric["type"] == "string":
-            m.string_value = metric["value"]
-        elif metric["type"] == "boolean":
-            m.bool_value = metric["value"]
-        else:
-            print(f"Ignoring metric '{m.name}' due to unknown type.")
-            continue
-        print(
-            f"Publishing metric: {m.name}, Type: {metric['type']}, Value: {metric['value']}, Timestamp: {m.timestamp}")
+        try:
+            # Set the appropriate value based on type
+            if metric["type"] == "float":
+                m.float_value = metric["value"]
+            elif metric["type"] == "double":
+                m.double_value = metric["value"]
+            elif metric["type"] == "integer":
+                # TODO: FOGL-9302 to handle signed integers
+                # value within the range of uint32
+                if metric["value"] <= 2147483647:
+                    m.int_value = metric["value"]
+                else:
+                    # value within the range of uint64
+                    m.long_value = metric["value"]
+            elif metric["type"] == "string":
+                m.string_value = metric["value"]
+            elif metric["type"] == "boolean":
+                m.boolean_value = metric["value"]
+            else:
+                print(f"Ignoring metric '{m.name}' due to unknown type.")
+                continue
+            print(f"Publishing metric with Name: {m.name}, Type: {metric['type']}, Value: {metric['value']}, "
+                  f"Timestamp: {m.timestamp}")
+        except Exception as ex:
+            print(f"Error in metric name: '{m.name}' due to '{ex}'")
     # Now you can serialize the payload or use it as needed
     binary_data = payload.SerializeToString()
     return binary_data
@@ -128,7 +144,7 @@ def create_ddeath_payload():
         m = payload.metrics.add()  # Add a new Metric to the Payload
         m.name = metric["name"]
         m.timestamp = metric["timestamp"]
-        m.bool_value = metric["value"]
+        m.boolean_value = metric["value"]
     # Now you can serialize the payload or use it as needed
     binary_data = payload.SerializeToString()
     return binary_data

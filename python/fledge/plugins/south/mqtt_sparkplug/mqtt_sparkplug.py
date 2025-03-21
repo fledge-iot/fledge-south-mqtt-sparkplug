@@ -9,11 +9,11 @@ import asyncio
 import copy
 import logging
 from datetime import datetime, timezone
-
+import ctypes
 import async_ingest
 import paho.mqtt.client as mqtt
 from fledge.common import logger
-
+from fledge.plugins.common import utils
 try:
     from fledge.plugins.south.mqtt_sparkplug.sparkplug_b import sparkplug_b_pb2
 except:
@@ -43,54 +43,101 @@ _DEFAULT_CONFIG = {
         'default': 'mqtt_sparkplug',
         'readonly': 'true'
     },
-    'assetName': {
-        'description': 'Name of Asset',
+    'user': {
+        'description': 'Username for MQTT Server',
         'type': 'string',
-        'default': 'mqtt',
-        'order': '1',
-        'displayName': 'Asset Name',
-        'mandatory': 'true'
+        'default': '',
+        'order': '4',
+        'displayName': 'Username',
+        'group': 'Authentication'
+    },
+    'password': {
+        'description': 'Password for MQTT Server',
+        'type': 'password',
+        'default': '',
+        'order': '5',
+        'displayName': 'Password',
+        'group': 'Authentication',
+        'validity': 'user != ""'
     },
     'url': {
         'description': 'Hostname for MQTT Server',
         'type': 'string',
-        'default': 'chariot.groov.com',
-        'order': '2',
-        'displayName': 'MQTT Host'
+        'default': 'localhost',
+        'order': '1',
+        'displayName': 'MQTT Host',
+        'mandatory': 'true',
+        'group': 'Connection'
     },
     'port': {
         'description': 'Port for MQTT Server',
         'type': 'string',
         'default': '1883',
-        'order': '3',
-        'displayName': 'MQTT Port'
+        'order': '2',
+        'displayName': 'MQTT Port',
+        'mandatory': 'true',
+        'group': 'Connection'
     },
-    'user': {
-        'description': 'Username for MQTT Server',
+    'assetNaming': {
+        'description': 'Asset naming',
+        'type': 'enumeration',
+        'options': ['Asset Name', 'Topic Fragments', 'Topic'],
+        'default': 'Asset Name',
+        'order': '6',
+        'displayName': 'Asset Naming',
+        'group': 'Readings Structure'
+    },
+    'assetName': {
+        'description': 'Asset Name',
         'type': 'string',
-        'default': 'opto',
-        'order': '4',
-        'displayName': 'Username'
+        'default': 'mqtt',
+        'order': '7',
+        'displayName': 'Asset Name',
+        'group': 'Readings Structure',
+        'validity': 'assetNaming == "Asset Name"'
     },
-    'password': {
-        'description': 'Password for MQTT Server',
-        'type': 'password',
-        'default': 'opto22',
-        'order': '5',
-        'displayName': 'Password'
+    'topicFragments': {
+        'description': 'Values will be used from the subscribed topic',
+        'type': 'string',
+        'default': 'spBv1.0/{group_id}/{message_type}/{edge_node_id}/{device_id}',
+        'order': '8',
+        'mandatory': 'true',
+        'displayName': 'Topic Fragments',
+        'group': 'Readings Structure',
+        'validity': 'assetNaming == "Topic Fragments"'
+    },
+    'datapoints': {
+        'description': 'To construct reading datapoints from the received data attributes on topic',
+        'type': 'enumeration',
+        'options': ['Per metric', 'Per device'],
+        'default': 'Per metric',
+        'order': '9',
+        'displayName': 'Datapoints',
+        'group': 'Readings Structure'
+    },
+    'attachTopicDatapoint': {
+        'description': 'Attach Topic as a Datapoint in Reading',
+        'type': 'boolean',
+        'default': 'false',
+        'order': '10',
+        'displayName': 'Attach Topic as a Datapoint',
+        'group': 'Readings Structure'
     },
     'topic': {
-        'description': 'Name of Topic',
+        'description': 'Topic to subscribe',
         'type': 'string',
-        'default': 'spBv1.0/Opto22/DDATA/groovEPIC_workshop/Strategy',
-        'order': '6',
-        'displayName': 'Topic'
-    },
+        'default': 'spBv1.0/group_id/message_type/edge_node_id/device_id',
+        'order': '3',
+        'displayName': 'Topic',
+        'mandatory': 'true',
+        'group': 'Topic'
+    }
 }
 
 c_callback = None
 c_ingest_ref = None
 loop = None
+NAMESPACE = "spBv1.0"
 
 
 def plugin_info():
@@ -103,7 +150,7 @@ def plugin_info():
 
     return {
         'name': _PLUGIN_NAME,
-        'version': '2.6.0',
+        'version': '3.0.0',
         'mode': 'async',
         'type': 'south',
         'interface': '1.0',
@@ -208,7 +255,7 @@ class MqttSubscriberClient(object):
     """ mqtt subscriber """
 
     __slots__ = ['mqtt_client', 'broker_host', 'broker_port', 'username', 'password', 'topic',
-                 'asset_name', 'loop']
+                 'asset_name', 'asset_naming', 'topic_fragments', 'attach_topic_datapoint', 'datapoints', 'loop']
 
     def __init__(self, config):
         self.mqtt_client = mqtt.Client()
@@ -216,19 +263,23 @@ class MqttSubscriberClient(object):
         self.broker_port = int(config['port']['value'])
         self.username = config['user']['value']
         self.password = config['password']['value']
+        self.asset_name = config['assetName']['value'].strip()
+        self.asset_naming = config['assetNaming']['value']
         self.topic = config['topic']['value']
-        self.asset_name = config['assetName']['value']
+        self.topic_fragments = config['topicFragments']['value'].lower()
+        self.attach_topic_datapoint = config['attachTopicDatapoint']['value']
+        self.datapoints = config['datapoints']['value']
 
     def on_connect(self, client, userdata, flags, rc):
         """ The callback for when the client receives a CONNACK response from the server """
 
-        if self.topic.startswith('spBv1.0'):
+        if self.validate_topic():
             client.connected_flag = True
             # subscribe at given Topic on connect
             client.subscribe(self.topic)
             _LOGGER.info("MQTT connection established. Subscribed to topic: {}".format(self.topic))
         else:
-            _LOGGER.error("The topic {} is NOT a Sparkplug B v1.0 topic.".format(self.topic))
+            _LOGGER.error("Invalid topic: {}.".format(self.topic))
 
     def on_disconnect(self, client, userdata, rc):
         pass
@@ -243,28 +294,65 @@ class MqttSubscriberClient(object):
             sparkplug_payload = sparkplug_b_pb2.Payload()
             sparkplug_payload.ParseFromString(msg.payload)
 
+            device_readings = {}
             for metric in sparkplug_payload.metrics:
                 value = "Unknown"
-                if metric.HasField("bool_value"):
+                if metric.HasField("boolean_value"):
                     """ bool value cast to int as internal. See FOGL-8067 """
-                    value = metric.bool_value
+                    value = metric.boolean_value
                 elif metric.HasField("float_value"):
                     value = metric.float_value
+                elif metric.HasField("double_value"):
+                    value = metric.double_value
+                # Handle signed and unsigned integer types
                 elif metric.HasField("int_value"):
-                    value = metric.int_value
+                    # Set data_type to metric.datatype if it exists, otherwise default to 3 (Int32)
+                    data_type = metric.datatype if metric.HasField("datatype") else 3
+
+                    # If data_type is less than 4 (Int8, Int16, Int32), treat as signed integer
+                    # Convert the value using ctypes.c_int for proper signed handling
+                    if data_type < 4:  # Signed integers: Int8, Int16, Int32
+                        value = ctypes.c_int(metric.int_value).value
+                    else:
+                        # For other integer types (e.g., unsigned integers), use the raw int_value
+                        # This acts as a fallback for default unsigned values
+                        value = metric.int_value  
+
+                # Handle long integer types (64-bit integers)
+                elif metric.HasField("long_value"):
+                    # Set data_type to metric.datatype if it exists, otherwise default to 4 (Int64)
+                    data_type = metric.datatype if metric.HasField("datatype") else 4
+
+                    # If data_type is 4, treat as a signed 64-bit integer (Int64)
+                    # Convert the value using ctypes.c_long for proper signed handling
+                    if data_type == 4:  # Int64
+                        value = ctypes.c_long(metric.long_value).value
+                    else:
+                        # For other long types (e.g., unsigned long), use the raw long_value
+                        # This acts as a fallback for default unsigned values
+                        value = metric.long_value 
                 elif metric.HasField("string_value"):
                     value = metric.string_value
-                # TODO: FOGL- 9198 - Handle other data types
+                # TODO: FOGL-9302, FOGL-9198 - Handle other data types
                 if value == "Unknown":
-                    _LOGGER.warning("Ignoring metric '{}' due to unknown type. "
-                                    "Only supported types are: float, integer, string, bool.".format(metric.name))
+                    _LOGGER.warning("Ignoring metric '{}' due to unknown type. Only supported types are: "
+                                    "float, double, unsigned integer's, string, bool.".format(metric.name))
                     continue
-
-                self.save(metric, value)
+                if self.datapoints == "Per metric":
+                    self.save({metric.name: value}, datetime.fromtimestamp(
+                        metric.timestamp, tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S.%s'))
+                else:
+                    device_readings.update({metric.name: value})
+            if self.datapoints == 'Per device':
+                self.save(device_readings, utils.local_timestamp())
+        except KeyError as err:
+            _LOGGER.error(err, "Check the topic fragments, and ensure that placeholders are replaced with values "
+                               "such as group_id, message_type, edge_node_id, or device_id.")
+        except ValueError as err:
+            _LOGGER.error(err)
         except Exception as ex:
-            msg = (
-                "Message payload must comply with spBv1.0 standards. Please ensure that the format and structure of the "
-                "payload adhere to the specified requirements.")
+            msg = ("Message payload must comply with {} standards. Please ensure that the format and structure "
+                   "of the payload adhere to the specified requirements.".format(NAMESPACE))
             _LOGGER.error(ex, msg)
 
     def on_subscribe(self, client, userdata, mid, granted_qos):
@@ -282,7 +370,8 @@ class MqttSubscriberClient(object):
         self.mqtt_client.on_message = self.on_message
         self.mqtt_client.on_disconnect = self.on_disconnect
         self.mqtt_client.connect(self.broker_host, self.broker_port)
-        _LOGGER.info("Attempting to connect to MQTT broker at {}:{}...".format(self.broker_host, self.broker_port))
+        _LOGGER.info("Attempting to connect to MQTT broker at {}:{}...".format(self.broker_host,
+                                                                               self.broker_port))
 
         self.mqtt_client.loop_start()
 
@@ -290,11 +379,67 @@ class MqttSubscriberClient(object):
         self.mqtt_client.disconnect()
         self.mqtt_client.loop_stop()
 
-    def save(self, metric, value):
+    def save(self, readings, ts):
+        if self.asset_naming == 'Topic Fragments':
+            asset = self.construct_asset_naming_topic_fragments()
+        elif self.asset_naming == 'Topic':
+            asset = self.topic
+        elif self.asset_naming == 'Asset Name':
+            asset = self.asset_name or self.topic
+            if not self.asset_name:
+                _LOGGER.warning("Asset Name cannot be empty or consist only of whitespace. It has been replaced with the '{}' topic from the incoming MQTT message.".format(self.topic))
+
+        if self.attach_topic_datapoint == "true":
+            readings.update({"SparkPlugB:Topic": self.topic})
         data = {
-            'asset': self.asset_name,
-            'timestamp': datetime.fromtimestamp(metric.timestamp, tz=timezone.utc
-                                                ).strftime('%Y-%m-%d %H:%M:%S.%s'),
-            'readings': {metric.name: value}
+            'asset': asset,
+            'timestamp': ts,
+            'readings': readings
         }
         async_ingest.ingest_callback(c_callback, c_ingest_ref, data)
+
+    def validate_topic(self) -> bool:
+        # TODO: FOGL-9268 wildcard characters
+        # +: Matches a single level in the topic hierarchy.
+        # #: Matches all remaining levels in the topic hierarchy.
+        # FIXME: Once the issue in JIRA is resolved, validate the topic accordingly
+        return True
+
+        # Split the topic by '/'
+        components = self.topic.split('/')
+
+        # Rule 1: Topic must have at-least 4 or maximum 5 components, device_id is Optional
+        if len(components) < 4 or len(components) > 5:
+            return False
+
+        # Rule 2: Must start with "spBv1.0"
+        if components[0] != NAMESPACE:
+            return False
+
+        # Rule 3: No empty strings allowed in components
+        for component in components[1:]:  # Skip the "spBv1.0"
+            if not component:
+                return False
+
+        # Rule 4: Valid message_type
+        valid_message_types = ["NBIRTH", "NDEATH", "DBIRTH", "DDEATH", "NDATA", "DDATA", "NCMD", "DCMD", "STATE"]
+        if components[2] not in valid_message_types:
+            return False
+
+    def construct_asset_naming_topic_fragments(self):
+        components = self.topic.split('/')
+        template = self.topic_fragments
+        topic_items = {
+            "namespace": NAMESPACE,
+            "group_id": components[1],
+            "message_type": components[2],
+            "edge_node_id": components[3],
+            "device_id": ""
+        }
+        if len(components) == 5:
+            topic_items.update({"device_id": components[4]})
+        else:
+            template = template.replace("/{device_id}", "")
+
+        return template.format(**topic_items)
+
